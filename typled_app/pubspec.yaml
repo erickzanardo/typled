@@ -1,0 +1,28 @@
+name: typled_editor
+description: "Typled Editor."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flame: ^1.19.0
+  flame_fire_atlas: ^1.5.4
+  typled:
+    path: ../typled
+  nes_ui: ^0.20.0
+  path: ^1.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
