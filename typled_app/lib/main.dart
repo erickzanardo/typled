@@ -23,13 +23,29 @@ void main(List<String> args) {
   final basePath = args[0];
   final file = args[1];
 
-  runApp(
-    MaterialApp(
-      theme: flutterNesTheme(brightness: Brightness.dark),
-      home: TypledApp(
+  late Widget child;
+
+  if (path.extension(file) == '.typled') {
+    child = Scaffold(
+      body: TypledApp(
         basePath: basePath,
         file: file,
       ),
+    );
+  } else if (path.extension(file) == '.typled_grid') {
+    child = TypledGridApp(
+      basePath: basePath,
+      file: file,
+    );
+  } else {
+    stderr.writeln('Unknown file extension: ${path.extension(file)}');
+    exit(1);
+  }
+
+  runApp(
+    MaterialApp(
+      theme: flutterNesTheme(brightness: Brightness.dark),
+      home: child,
     ),
   );
 }
@@ -125,11 +141,11 @@ class TypledGame extends FlameGame {
   }
 
   @override
-    void onGameResize(Vector2 size) {
-      super.onGameResize(size);
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
 
-      _setCamera();
-    }
+    _setCamera();
+  }
 
   void _setCamera() {
     final currentAtlas = _currentAtlas;
@@ -137,7 +153,6 @@ class TypledGame extends FlameGame {
     if (currentTypled == null || currentAtlas == null) {
       return;
     }
-
 
     // Set the zoom based on the size of the map and the canvas
     final xScale = size.x / (currentTypled.width * currentAtlas.tileWidth);
@@ -153,11 +168,91 @@ class TypledGame extends FlameGame {
   }
 }
 
-class TypledApp extends StatefulWidget {
-  const TypledApp({required this.basePath, required this.file, super.key});
+class TypledGridApp extends StatefulWidget {
+  const TypledGridApp({
+    required this.basePath,
+    required this.file,
+    super.key,
+  });
 
   final String basePath;
   final String file;
+
+  @override
+  State<TypledGridApp> createState() => _TypledGridAppState();
+}
+
+class _TypledGridAppState extends State<TypledGridApp> {
+  late Future<TypledGrid> _typledGrid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _typledGrid = _loadTypledGrid();
+  }
+
+  Future<TypledGrid> _loadTypledGrid() async {
+    final file = File(path.join(widget.basePath, widget.file));
+    final fileContent = await file.readAsString();
+    return TypledGrid.parse(fileContent);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: _typledGrid,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final typledGrid = snapshot.data as TypledGrid;
+
+            return LayoutBuilder(builder: (context, constraints) {
+              final totalWidth = typledGrid.gridWidth * typledGrid.cellWidth;
+              final totalHeight = typledGrid.gridHeight * typledGrid.cellHeight;
+
+              final scale = math.min(
+                constraints.maxWidth / totalWidth,
+                constraints.maxHeight / totalHeight,
+              );
+
+              return Stack(
+                children: [
+                  for (final cell in typledGrid.cells.entries)
+                    Positioned(
+                      left: (cell.key.$1 * typledGrid.cellWidth).toDouble() *
+                          scale,
+                      top: (cell.key.$2 * typledGrid.cellHeight).toDouble() *
+                          scale,
+                      width: typledGrid.cellWidth.toDouble() * scale,
+                      height: typledGrid.cellHeight.toDouble() * scale,
+                      child: TypledApp(
+                        showInfo: false,
+                        basePath: widget.basePath,
+                        file: cell.value,
+                      ),
+                    )
+                ],
+              );
+            });
+          }
+          return const SizedBox();
+        },
+      ),
+    );
+  }
+}
+
+class TypledApp extends StatefulWidget {
+  const TypledApp(
+      {required this.basePath,
+      required this.file,
+      this.showInfo = true,
+      super.key});
+
+  final String basePath;
+  final String file;
+  final bool showInfo;
 
   @override
   State<TypledApp> createState() => _TypledAppState();
@@ -178,39 +273,40 @@ class _TypledAppState extends State<TypledApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                Text(
-                  'Typled',
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'File: ${widget.file}',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Base Path: ${widget.basePath}',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
+    if (!widget.showInfo) {
+      return GameWidget(game: _game);
+    }
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                'Typled',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'File: ${widget.file}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Base Path: ${widget.basePath}',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
-          const Divider(),
-          Expanded(
-            child: GameWidget(game: _game),
-          ),
-        ],
-      ),
+        ),
+        const Divider(),
+        Expanded(
+          child: GameWidget(game: _game),
+        ),
+      ],
     );
   }
 }
