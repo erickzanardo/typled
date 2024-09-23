@@ -27,7 +27,7 @@ void main(List<String> args) {
 
   if (path.extension(file) == '.typled') {
     child = Scaffold(
-      body: TypledApp(
+      body: TypledMapView(
         basePath: basePath,
         file: file,
       ),
@@ -38,7 +38,7 @@ void main(List<String> args) {
       file: file,
     );
   } else {
-    stderr.writeln('Unknown file extension: ${path.extension(file)}');
+    print('Unknown file extension: ${path.extension(file)}');
     exit(1);
   }
 
@@ -190,6 +190,12 @@ class _TypledGridAppState extends State<TypledGridApp> {
     super.initState();
 
     _typledGrid = _loadTypledGrid();
+
+    File(path.join(widget.basePath, widget.file)).watch().listen((event) {
+      setState(() {
+        _typledGrid = _loadTypledGrid();
+      });
+    });
   }
 
   Future<TypledGrid> _loadTypledGrid() async {
@@ -226,7 +232,7 @@ class _TypledGridAppState extends State<TypledGridApp> {
                           scale,
                       width: typledGrid.cellWidth.toDouble() * scale,
                       height: typledGrid.cellHeight.toDouble() * scale,
-                      child: TypledApp(
+                      child: TypledMapView(
                         showInfo: false,
                         basePath: widget.basePath,
                         file: cell.value,
@@ -243,8 +249,8 @@ class _TypledGridAppState extends State<TypledGridApp> {
   }
 }
 
-class TypledApp extends StatefulWidget {
-  const TypledApp(
+class TypledMapView extends StatefulWidget {
+  const TypledMapView(
       {required this.basePath,
       required this.file,
       this.showInfo = true,
@@ -255,10 +261,10 @@ class TypledApp extends StatefulWidget {
   final bool showInfo;
 
   @override
-  State<TypledApp> createState() => _TypledAppState();
+  State<TypledMapView> createState() => _TypledMapViewState();
 }
 
-class _TypledAppState extends State<TypledApp> {
+class _TypledMapViewState extends State<TypledMapView> {
   late final TypledGame _game;
 
   @override
