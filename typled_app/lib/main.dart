@@ -22,9 +22,11 @@ void main(List<String> args) {
 
   if (path.extension(file) == '.typled') {
     child = Scaffold(
-      body: TypledMapView(
-        basePath: basePath,
-        file: file,
+      body: NesScaffold(
+        body: TypledMapView(
+          basePath: basePath,
+          file: file,
+        ),
       ),
     );
   } else if (path.extension(file) == '.typled_grid') {
@@ -37,9 +39,19 @@ void main(List<String> args) {
     exit(1);
   }
 
+  final theme = flutterNesTheme(
+    brightness: Brightness.dark,
+    nesSnackbarTheme: const NesSnackbarTheme(
+      normal: Colors.white,
+      success: Colors.green,
+      warning: Colors.orange,
+      error: Colors.red,
+    ),
+  );
+
   runApp(
     MaterialApp(
-      theme: flutterNesTheme(brightness: Brightness.dark),
+      theme: theme,
       home: child,
     ),
   );

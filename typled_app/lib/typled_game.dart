@@ -7,6 +7,8 @@ import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame_fire_atlas/flame_fire_atlas.dart';
+import 'package:flutter/material.dart';
+import 'package:nes_ui/nes_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:typled/typled.dart';
 
@@ -38,8 +40,13 @@ class TypledGame extends FlameGame {
     _subscription = _file.watch().listen((event) {
       _build();
     });
+  }
 
-    await _build();
+  @override
+  void onAttach() {
+    super.onAttach();
+
+    _build();
   }
 
   @override
@@ -51,6 +58,7 @@ class TypledGame extends FlameGame {
   }
 
   Future<void> _build() async {
+    final errors = <String>{};
     try {
       final fileContent = await _file.readAsString();
       final currentTypled = Typled.parse(fileContent);
@@ -86,14 +94,18 @@ class TypledGame extends FlameGame {
             if (spriteId == 'EMPTY') {
               continue;
             }
-            final sprite = currentAtlas.getSprite(spriteId);
-            world.add(
-              SpriteComponent(
-                position: position,
-                size: sprite.srcSize,
-                sprite: sprite,
-              ),
-            );
+            try {
+              final sprite = currentAtlas.getSprite(spriteId);
+              world.add(
+                SpriteComponent(
+                  position: position,
+                  size: sprite.srcSize,
+                  sprite: sprite,
+                ),
+              );
+            } catch (e) {
+              errors.add(e.toString());
+            }
           }
         }
       }
@@ -103,7 +115,17 @@ class TypledGame extends FlameGame {
 
       _setCamera();
     } catch (e) {
-      print(e.toString());
+      errors.add(e.toString());
+    }
+
+    for (final error in errors) {
+      NesScaffoldMessenger.of(buildContext!).showSnackBar(
+        NesSnackbar(
+          type: NesSnackbarType.error,
+          text: error,
+        ),
+        alignment: Alignment.topRight,
+      );
     }
   }
 
