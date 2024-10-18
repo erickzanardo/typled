@@ -21,11 +21,13 @@ class TypledGame extends FlameGame {
   final String _filePath;
 
   late final File _file;
-  FireAtlas? _currentAtlas;
-  Typled? _currentTypled;
+  FireAtlas? loadedAtlas;
+  Typled? loadedTypled;
 
   late final StreamSubscription<FileSystemEvent> _subscription;
   StreamSubscription<FileSystemEvent>? _atlasSubscription;
+
+  bool customCamera = false;
 
   @override
   FutureOr<void> onLoad() async {
@@ -35,7 +37,7 @@ class TypledGame extends FlameGame {
 
     _file = File(path.join(_basePath, _filePath));
 
-    camera.viewfinder.anchor = Anchor.center;
+    camera.viewfinder.anchor = Anchor.topLeft;
 
     _subscription = _file.watch().listen((event) {
       _build();
@@ -127,10 +129,10 @@ class TypledGame extends FlameGame {
         }
       }
 
-      _currentAtlas = currentAtlas;
-      _currentTypled = currentTypled;
+      loadedAtlas = currentAtlas;
+      loadedTypled = currentTypled;
 
-      _setCamera();
+      setCamera();
     } catch (e) {
       errors.add(e.toString());
     }
@@ -150,12 +152,19 @@ class TypledGame extends FlameGame {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
 
-    _setCamera();
+    if (this.size == size) {
+      return;
+    }
+    setCamera();
   }
 
-  void _setCamera() {
-    final currentAtlas = _currentAtlas;
-    final currentTypled = _currentTypled;
+  void setCamera() {
+    if (customCamera) {
+      return;
+    }
+
+    final currentAtlas = loadedAtlas;
+    final currentTypled = loadedTypled;
     if (currentTypled == null || currentAtlas == null) {
       return;
     }
@@ -167,9 +176,6 @@ class TypledGame extends FlameGame {
     final scale = math.min(xScale, yScale);
 
     camera.viewfinder.zoom = scale;
-    camera.viewfinder.position = Vector2(
-      currentTypled.width * currentAtlas.tileWidth / 2,
-      currentTypled.height * currentAtlas.tileHeight / 2,
-    );
+    camera.viewfinder.position = Vector2.zero();
   }
 }
