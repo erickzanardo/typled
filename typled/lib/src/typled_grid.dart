@@ -1,7 +1,6 @@
 import 'dart:io';
 
 class TypledGrid {
-
   TypledGrid({
     required this.gridWidth,
     required this.gridHeight,

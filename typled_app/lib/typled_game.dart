@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:typled/typled.dart';
+import 'package:typled_editor/extensions/color.dart';
 
 class TypledGame extends FlameGame {
   TypledGame({required String basePath, required String filePath})
@@ -72,6 +72,23 @@ class TypledGame extends FlameGame {
       final atlasBytes = await atlasFile.readAsBytes();
       final currentAtlas = FireAtlas.deserializeBytes(atlasBytes);
       await currentAtlas.loadImage(images: Images());
+
+      if (currentTypled.backgroundColor != null) {
+        try {
+          final mapBackgroundColor = currentTypled.backgroundColor!.toColor();
+          world.add(
+            RectangleComponent(
+              size: Vector2(
+                currentTypled.width.toDouble() * currentAtlas.tileWidth,
+                currentTypled.height.toDouble() * currentAtlas.tileHeight,
+              ),
+              paint: Paint()..color = mapBackgroundColor,
+            ),
+          );
+        } catch (e) {
+          errors.add(e.toString());
+        }
+      }
 
       _atlasSubscription ??= atlasFile.watch().listen((event) {
         _build();

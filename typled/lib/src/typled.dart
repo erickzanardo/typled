@@ -10,6 +10,7 @@ class Typled {
     required this.atlas,
     required this.palette,
     required this.layers,
+    this.backgroundColor,
   });
 
   final String name;
@@ -18,8 +19,9 @@ class Typled {
   final String atlas;
   final Map<String, String> palette;
   final List<List<List<String>>> layers;
+  final String? backgroundColor;
 
-  factory Typled.parse(String content)  {
+  factory Typled.parse(String content) {
     final lines = content.split(Platform.lineTerminator);
 
     void throwError(String line, String expected) {
@@ -32,6 +34,7 @@ class Typled {
     late final String atlas;
     final palette = <String, String>{};
     final layers = <List<List<String>>>[];
+    String? backgroundColor;
 
     var state = _ReadingState.none;
     for (final line in lines) {
@@ -58,6 +61,8 @@ class Typled {
             height = int.parse(line.split('=')[1].trim());
           } else if (line.startsWith('atlas')) {
             atlas = line.split('=')[1].trim();
+          } else if (line.startsWith('backgroundColor')) {
+            backgroundColor = line.split('=')[1].trim();
           } else {
             throwError(line, '[palette]|name|width|height|atlas');
           }
@@ -96,6 +101,7 @@ class Typled {
       atlas: atlas,
       palette: palette,
       layers: layers,
+      backgroundColor: backgroundColor,
     );
   }
 }
