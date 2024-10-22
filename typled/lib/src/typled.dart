@@ -80,6 +80,11 @@ class Typled {
             if (key.isEmpty || value.isEmpty) {
               throwError(line, 'key=value');
             }
+            if (palette.containsKey(key)) {
+              throw Exception(
+                'Duplicated key $key with values ($value, ${palette[key]})',
+              );
+            }
             palette[key] = value;
           } else {
             throwError(line, '[layer]|key=value');
