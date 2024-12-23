@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
+import 'package:typled_cli/src/app/app.dart';
 
 class OpenCommand extends Command {
   @override
@@ -14,6 +17,15 @@ class OpenCommand extends Command {
       'file',
       abbr: 'f',
       help: 'The file to open',
+      mandatory: true,
       valueHelp: 'file',
     );
+
+  @override
+  FutureOr? run() async {
+    await ensureAppIsDownloaded();
+
+    final file = argResults!['file'] as String;
+    openFile(file);
+  }
 }
