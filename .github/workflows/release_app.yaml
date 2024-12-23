@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: osx
-          path: typled_app/build/macos/Build/Products/Release/typled.zip
+          path: typled_app/build/macos/Build/Products/Release/osx.zip
 
           #  windows:
           #    runs-on: windows-latest
