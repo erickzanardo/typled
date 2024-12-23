@@ -1,0 +1,110 @@
+name: release_app
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  #  linux:
+  #    runs-on: ubuntu-latest
+  #
+  #    defaults:
+  #      run:
+  #        shell: bash
+  #        working-directory: fire_atlas_editor
+  #
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - uses: subosito/flutter-action@v2
+  #        with:
+  #          channel: 'stable'
+  #      - run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+  #      - run: flutter build linux
+  #      - name: Zips the build
+  #        uses: papeloto/action-zip@v1
+  #        with:
+  #          files: fire_atlas_editor/build/linux/x64/release/bundle/
+  #          dest: fa_linux.zip
+  #      - name: Upload binary
+  #        uses: actions/upload-artifact@v2
+  #        with:
+  #          name: fa_linux
+  #          path: fa_linux.zip
+  #
+  mac:
+    runs-on: macos-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: typled_app
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - run: flutter build macos
+      - name: Zips the build
+        run: cd build/macos/Build/Products/Release/ && zip -r osx.zip typled.app
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: osx
+          path: typled_app/build/macos/Build/Products/Release/typled.zip
+
+          #  windows:
+          #    runs-on: windows-latest
+          #
+          #    defaults:
+          #      run:
+          #        shell: bash
+          #        working-directory: fire_atlas_editor
+          #
+          #    steps:
+          #      - uses: actions/checkout@v2
+          #      - uses: subosito/flutter-action@v2
+          #        with:
+          #          channel: 'stable'
+          #      - run: flutter config --enable-windows-desktop
+          #      - run: flutter build windows
+          #      - name: Zips the build
+          #        uses: papeloto/action-zip@v1
+          #        with:
+          #          files: fire_atlas_editor/build/windows/runner/Release/
+          #          dest: fa_windows.zip
+          #      - name: Upload binary
+          #        uses: actions/upload-artifact@v2
+          #        with:
+          #          name: fa_windows
+          #          path: fa_windows.zip
+
+  release_desktop:
+    needs: [mac]
+    runs-on: ubuntu-latest
+
+    steps:
+      #      - name: Download Linux artifact
+      #        uses: actions/download-artifact@v4.1.7
+      #        with:
+      #          name: fa_linux
+
+      - name: Download Mac artifact
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: osx
+
+          #      - name: Download Windows artifact
+          #        uses: actions/download-artifact@v4.1.7
+          #        with:
+          #          name: fa_windows
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            osx.zip
+          prerelease: true
