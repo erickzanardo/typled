@@ -27,7 +27,7 @@ jobs:
   #          files: fire_atlas_editor/build/linux/x64/release/bundle/
   #          dest: fa_linux.zip
   #      - name: Upload binary
-  #        uses: actions/upload-artifact@v2
+  #        uses: actions/upload-artifact@v4
   #        with:
   #          name: fa_linux
   #          path: fa_linux.zip
@@ -49,7 +49,7 @@ jobs:
       - name: Zips the build
         run: cd build/macos/Build/Products/Release/ && zip -r osx.zip typled.app
       - name: Upload binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: osx
           path: typled_app/build/macos/Build/Products/Release/typled.zip
@@ -75,7 +75,7 @@ jobs:
           #          files: fire_atlas_editor/build/windows/runner/Release/
           #          dest: fa_windows.zip
           #      - name: Upload binary
-          #        uses: actions/upload-artifact@v2
+          #        uses: actions/upload-artifact@v4
           #        with:
           #          name: fa_windows
           #          path: fa_windows.zip
