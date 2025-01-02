@@ -1,5 +1,5 @@
 name: typled_cli
-description: A sample command-line application with basic argument parsing.
+description: CLI tool for the typled map editor.
 version: 0.0.1
 repository: https://github.com/erickzanardo/typled
 
