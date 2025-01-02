@@ -1,1 +1,6 @@
-A sample command-line application providing basic argument parsing with an entrypoint in `bin/`.
+# Typled CLI
+
+The CLI for the Typled tool.
+
+
+https://github.com/erickzanardo/typled
