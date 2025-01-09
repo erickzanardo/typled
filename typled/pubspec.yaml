@@ -1,14 +1,10 @@
 name: typled
-description: A sample command-line application.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+description: The package to parse typled text content.
+version: 0.0.1
+repository: https://github.com/erickzanardo/typled
 
 environment:
   sdk: ^3.5.1
-
-# Add regular dependencies here.
-dependencies:
-  # path: ^1.8.0
 
 dev_dependencies:
   lints: ^4.0.0
