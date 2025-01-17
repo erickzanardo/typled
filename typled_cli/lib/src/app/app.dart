@@ -87,10 +87,22 @@ void openFile(String filePath) {
     exit(1);
   }
 
-  final process = Process.runSync(
-    'open',
-    ['-n', appPath, '--args', Directory.current.path, filePath],
-  );
+  late final ProcessResult process;
+
+  if (Platform.isMacOS) {
+    process = Process.runSync(
+      'open',
+      ['-n', appPath, '--args', Directory.current.path, filePath],
+    );
+  } else if (Platform.isLinux) {
+    process = Process.runSync(
+      appPath,
+      [
+        Directory.current.path,
+        filePath,
+      ],
+    );
+  }
 
   if (process.exitCode != 0) {
     logger.err('Failed to open file');
