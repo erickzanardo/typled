@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flame/game.dart';
 import 'package:typled_editor/typled_game.dart';
 
@@ -13,6 +15,7 @@ abstract class Command {
     const ResetCameraCommand(),
     const PanCameraCommand(),
     const MoveCommand(),
+    const ExitCommand(),
   ];
 
   final String command;
@@ -113,5 +116,19 @@ class MoveCommand extends Command {
         y * atlas.tileHeight,
       );
     }
+  }
+}
+
+class ExitCommand extends Command {
+  const ExitCommand()
+      : super(
+          command: 'q',
+          description: 'Exits the editor.',
+          usage: 'q',
+        );
+
+  @override
+  void execute(TypledGame game, List<String> args) {
+    exit(0);
   }
 }
