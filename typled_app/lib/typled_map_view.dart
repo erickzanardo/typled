@@ -25,7 +25,7 @@ class _TypledMapViewState extends State<TypledMapView> {
   late final TypledGame _game;
   String _command = '';
   bool _commandMode = false;
-  List<String> _commandHistory = [];
+  final List<String> _commandHistory = [];
   int _commandHistoryIndex = 0;
 
   @override

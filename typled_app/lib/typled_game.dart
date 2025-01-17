@@ -148,13 +148,16 @@ class TypledGame extends FlameGame {
     }
   }
 
+  Vector2? _lastSize;
   @override
   void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-
-    if (this.size == size) {
+    if (_lastSize == size) {
       return;
     }
+
+    _lastSize = size.clone();
+    super.onGameResize(size);
+
     setCamera();
   }
 
