@@ -82,7 +82,10 @@ Future<void> ensureAppIsDownloaded() async {
 void openFile(String filePath) {
   final appPath = _getAppPath();
 
-  // open -n /Users/erickzanardo/bin/typled.app --args $(pwd) $1
+  if (!File(filePath).existsSync()) {
+    logger.err('File not found: $filePath');
+    exit(1);
+  }
 
   final process = Process.runSync(
     'open',
