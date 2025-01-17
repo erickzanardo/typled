@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/commands.dart';
 import 'package:typled_editor/typled_game.dart';
+import 'package:typled_editor/widgets/help_dialog.dart';
 
 class TypledMapView extends StatefulWidget {
   const TypledMapView(
@@ -66,6 +67,11 @@ class _TypledMapViewState extends State<TypledMapView> {
                   if (parts.isNotEmpty) {
                     final command = parts.first;
                     final args = parts.sublist(1);
+
+                    if (command == 'help') {
+                      HelpDialog.show(context);
+                      return KeyEventResult.handled;
+                    }
 
                     final foundCommands = Command.commands.where(
                       (element) => element.command == command,

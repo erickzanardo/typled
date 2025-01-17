@@ -4,6 +4,8 @@ import 'package:typled_editor/typled_game.dart';
 abstract class Command {
   const Command({
     required this.command,
+    required this.description,
+    required this.usage,
   });
 
   static final List<Command> commands = [
@@ -14,12 +16,19 @@ abstract class Command {
   ];
 
   final String command;
+  final String description;
+  final String usage;
 
   void execute(TypledGame game, List<String> args);
 }
 
 class ZoomCommand extends Command {
-  const ZoomCommand() : super(command: 'zoom');
+  const ZoomCommand()
+      : super(
+          command: 'zoom',
+          description: 'Zooms the camera to the specified level.',
+          usage: 'zoom <level>',
+        );
 
   @override
   void execute(TypledGame game, List<String> args) {
@@ -37,7 +46,12 @@ class ZoomCommand extends Command {
 }
 
 class ResetCameraCommand extends Command {
-  const ResetCameraCommand() : super(command: 'reset_camera');
+  const ResetCameraCommand()
+      : super(
+          command: 'reset_camera',
+          description: 'Resets the camera to the default position.',
+          usage: 'reset_camera',
+        );
 
   @override
   void execute(TypledGame game, List<String> args) {
@@ -47,7 +61,12 @@ class ResetCameraCommand extends Command {
 }
 
 class PanCameraCommand extends Command {
-  const PanCameraCommand() : super(command: 'pan');
+  const PanCameraCommand()
+      : super(
+          command: 'pan',
+          description: 'Pans the camera with the specified values.',
+          usage: 'pan <x> <y>',
+        );
 
   @override
   void execute(TypledGame game, List<String> args) {
@@ -70,7 +89,12 @@ class PanCameraCommand extends Command {
 }
 
 class MoveCommand extends Command {
-  const MoveCommand() : super(command: 'move');
+  const MoveCommand()
+      : super(
+          command: 'move',
+          description: 'Moves the camera to the specified position.',
+          usage: 'move <x> <y>',
+        );
 
   @override
   void execute(TypledGame game, List<String> args) {
@@ -88,7 +112,6 @@ class MoveCommand extends Command {
         x * atlas.tileWidth,
         y * atlas.tileHeight,
       );
-      print(game.camera.viewfinder.position);
     }
   }
 }
