@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:nes_ui/nes_ui.dart';
-import 'package:typled_editor/typled_grid_view.dart';
-import 'package:typled_editor/typled_map_view.dart';
+import 'package:typled_editor/grid/grid.dart';
+import 'package:typled_editor/map/map.dart';
 
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();

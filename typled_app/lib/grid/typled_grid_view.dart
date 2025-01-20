@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:typled/typled.dart';
 import 'package:path/path.dart' as path;
-import 'package:typled_editor/typled_map_view.dart';
+import 'package:typled_editor/map/map.dart';
 
 class TypledGridView extends StatefulWidget {
   const TypledGridView({
