@@ -1,11 +1,11 @@
-import 'dart:math' as math;
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nes_ui/nes_ui.dart';
-import 'package:typled_editor/commands.dart';
 import 'package:typled_editor/extensions/extensions.dart';
-import 'package:typled_editor/typled_game.dart';
+import 'package:typled_editor/map/cubit/map_cubit.dart';
+import 'package:typled_editor/map/typled_game.dart';
 import 'package:typled_editor/widgets/help_dialog.dart';
 
 class TypledMapView extends StatefulWidget {
@@ -25,10 +25,6 @@ class TypledMapView extends StatefulWidget {
 
 class _TypledMapViewState extends State<TypledMapView> {
   late final TypledGame _game;
-  String _command = '';
-  bool _commandMode = false;
-  final List<String> _commandHistory = [];
-  int _commandHistoryIndex = 0;
 
   @override
   void initState() {
@@ -49,143 +45,138 @@ class _TypledMapViewState extends State<TypledMapView> {
           fontSize: 12,
         );
     const padding = EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0);
-    return Column(
-      children: [
-        Expanded(
-          child: GameWidget(
-            game: _game,
-            autofocus: false,
-          ),
-        ),
-        Focus(
-          autofocus: true,
-          onKeyEvent: (node, event) {
-            if (event is KeyDownEvent) {
-              if (_commandMode) {
-                if (event.logicalKey == LogicalKeyboardKey.enter) {
-                  final parts = _command.split(' ');
-
-                  if (parts.isNotEmpty) {
-                    final command = parts.first;
-                    final args = parts.sublist(1);
-
-                    if (command == 'help') {
-                      HelpDialog.show(context);
-                      return KeyEventResult.handled;
-                    }
-
-                    final foundCommands = Command.commands.where(
-                      (element) => element.command == command,
-                    );
-
-                    if (foundCommands.isEmpty) {
-                      NesScaffoldMessenger.of(context).showSnackBar(
-                        alignment: Alignment.topRight,
-                        const NesSnackbar(
-                          type: NesSnackbarType.error,
-                          text: 'Unknown command',
-                        ),
-                      );
-                    } else {
-                      _commandHistory.add(_command);
-                      final foundCommand = foundCommands.first;
-                      foundCommand.execute(_game, args);
-                    }
-                  }
-
-                  setState(() {
-                    _commandMode = false;
-                    _commandHistoryIndex = _commandHistory.length;
-                    _command = '';
-                  });
-                } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                  if (_commandHistoryIndex > 0) {
-                    setState(() {
-                      _commandHistoryIndex--;
-                      _command = _commandHistory[_commandHistoryIndex];
-                    });
-                  }
-                } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                  if (_commandHistoryIndex < _commandHistory.length - 1) {
-                    setState(() {
-                      _commandHistoryIndex++;
-                      _command = _commandHistory[_commandHistoryIndex];
-                    });
-                  }
-                } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
-                  setState(() {
-                    _command = _command.substring(
-                      0,
-                      math.max(0, _command.length - 1),
-                    );
-                  });
-                } else if (event.logicalKey == LogicalKeyboardKey.escape) {
-                  setState(() {
-                    _command = '';
-                    _commandMode = false;
-                  });
-                } else if (event.logicalKey == LogicalKeyboardKey.colon) {
-                  // ignore
-                } else {
-                  setState(() {
-                    _command += event.character ?? '';
-                  });
-                }
-              } else if (event.logicalKey == LogicalKeyboardKey.colon &&
-                  !_commandMode) {
-                setState(() {
-                  _commandMode = true;
-                });
-              }
-            }
-            return KeyEventResult.handled;
-          },
-          child: _commandMode
-              ? ColoredBox(
-                  color: Colors.blue[900]!,
-                  child: Padding(
-                    padding: padding,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        ':$_command',
-                        style: smallFontStyle,
-                      ),
-                    ),
-                  ),
-                )
-              : Row(
+    return BlocProvider(
+      create: (context) => MapCubit(),
+      child: BlocBuilder<MapCubit, MapState>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              Expanded(
+                child: Row(
                   children: [
                     Expanded(
-                      child: ColoredBox(
-                        color: Colors.blue,
-                        child: Padding(
-                          padding: padding,
-                          child: Text(
-                            widget.basePath.homeReplaced,
-                            style: smallFontStyle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
+                      child: GameWidget(
+                        game: _game,
+                        autofocus: false,
                       ),
                     ),
-                    Expanded(
-                      child: ColoredBox(
-                        color: Colors.green,
-                        child: Padding(
-                          padding: padding,
-                          child: Text(
-                            widget.file,
-                            style: smallFontStyle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                    if (state.showPalette && _game.loadedTypled != null)
+                      SizedBox(
+                        width: 250,
+                        child: Wrap(
+                          children: [
+                            for (var item
+                                in _game.loadedTypled!.palette.entries)
+                              NesContainer(
+                                width: 40,
+                                height: 40,
+                                padding: const EdgeInsets.all(8),
+                                child: Stack(
+                                  children: [
+                                    Text(item.key),
+                                  ],
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    )
                   ],
                 ),
-        ),
-      ],
+              ),
+              Focus(
+                autofocus: true,
+                onKeyEvent: (node, event) {
+                  if (event is KeyDownEvent) {
+                    if (state.commandMode) {
+                      if (event.logicalKey == LogicalKeyboardKey.enter) {
+                        final result =
+                            context.read<MapCubit>().submitCommand(_game);
+                        if (result == SubmitCommandResult.notFound) {
+                          NesScaffoldMessenger.of(context).showSnackBar(
+                            alignment: Alignment.topRight,
+                            const NesSnackbar(
+                              type: NesSnackbarType.error,
+                              text: 'Unknown command',
+                            ),
+                          );
+                        } else if (result == SubmitCommandResult.help) {
+                          HelpDialog.show(context);
+                        }
+                      } else if (event.logicalKey ==
+                          LogicalKeyboardKey.arrowUp) {
+                        context.read<MapCubit>().searchHistoryUp();
+                      } else if (event.logicalKey ==
+                          LogicalKeyboardKey.arrowDown) {
+                        context.read<MapCubit>().searchHistoryDown();
+                      } else if (event.logicalKey ==
+                          LogicalKeyboardKey.backspace) {
+                        context.read<MapCubit>().commandBackspace();
+                      } else if (event.logicalKey ==
+                          LogicalKeyboardKey.escape) {
+                        context.read<MapCubit>().exitCommandMode();
+                      } else if (event.logicalKey == LogicalKeyboardKey.colon) {
+                        // ignore
+                      } else {
+                        context
+                            .read<MapCubit>()
+                            .typeCommand(event.character ?? '');
+                      }
+                    } else if (event.logicalKey == LogicalKeyboardKey.colon &&
+                        !state.commandMode) {
+                      context.read<MapCubit>().enterCommandMode();
+                    }
+                  }
+                  return KeyEventResult.handled;
+                },
+                child: state.commandMode
+                    ? ColoredBox(
+                        color: Colors.blue[900]!,
+                        child: Padding(
+                          padding: padding,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              ':${state.command}',
+                              style: smallFontStyle,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: ColoredBox(
+                              color: Colors.blue,
+                              child: Padding(
+                                padding: padding,
+                                child: Text(
+                                  widget.basePath.homeReplaced,
+                                  style: smallFontStyle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ColoredBox(
+                              color: Colors.green,
+                              child: Padding(
+                                padding: padding,
+                                child: Text(
+                                  widget.file,
+                                  style: smallFontStyle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

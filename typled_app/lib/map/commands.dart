@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flame/game.dart';
-import 'package:typled_editor/typled_game.dart';
+import 'package:typled_editor/map/typled_game.dart';
 
 abstract class Command {
   const Command({

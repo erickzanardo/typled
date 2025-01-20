@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nes_ui/nes_ui.dart';
-import 'package:typled_editor/commands.dart';
+import 'package:typled_editor/map/commands.dart';
 
 class HelpDialog extends StatelessWidget {
   const HelpDialog({super.key});
