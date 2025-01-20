@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/commands.dart';
+import 'package:typled_editor/extensions/extensions.dart';
 import 'package:typled_editor/typled_game.dart';
 import 'package:typled_editor/widgets/help_dialog.dart';
 
@@ -161,8 +162,9 @@ class _TypledMapViewState extends State<TypledMapView> {
                         child: Padding(
                           padding: padding,
                           child: Text(
-                            widget.basePath,
+                            widget.basePath.homeReplaced,
                             style: smallFontStyle,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
@@ -175,6 +177,7 @@ class _TypledMapViewState extends State<TypledMapView> {
                           child: Text(
                             widget.file,
                             style: smallFontStyle,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
