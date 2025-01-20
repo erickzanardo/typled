@@ -22,7 +22,6 @@ class MapCubit extends Cubit<MapState> {
       final command = parts.first;
       final args = parts.sublist(1);
 
-      // AQUIII
       if (command == 'help') {
         return SubmitCommandResult.help;
       }
@@ -35,6 +34,8 @@ class MapCubit extends Cubit<MapState> {
         emit(state.copyWithNewHistory(state.command));
         final foundCommand = foundCommands.first;
         foundCommand.execute(game, args);
+      } else {
+        return SubmitCommandResult.notFound;
       }
       emit(state.copyWith(
         commandMode: false,
