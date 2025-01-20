@@ -1,4 +1,5 @@
 import 'package:flame/game.dart';
+import 'package:flame/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,22 +63,41 @@ class _TypledMapViewState extends State<TypledMapView> {
                     ),
                     if (state.showPalette && _game.loadedTypled != null)
                       SizedBox(
-                        width: 250,
-                        child: Wrap(
-                          children: [
-                            for (var item
-                                in _game.loadedTypled!.palette.entries)
-                              NesContainer(
-                                width: 40,
-                                height: 40,
-                                padding: const EdgeInsets.all(8),
-                                child: Stack(
-                                  children: [
-                                    Text(item.key),
-                                  ],
-                                ),
-                              ),
-                          ],
+                        width: 240,
+                        height: double.infinity,
+                        child: NesSingleChildScrollView(
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Wrap(
+                              children: [
+                                for (var item
+                                    in _game.loadedTypled!.palette.entries)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: NesContainer(
+                                      width: 80,
+                                      height: 80,
+                                      padding: const EdgeInsets.all(8),
+                                      child: Stack(
+                                        children: [
+                                          Positioned.fill(
+                                            child: item.value == 'EMPTY'
+                                                ? const Text('EMPTY')
+                                                : SpriteWidget(
+                                                    sprite: _game.loadedAtlas!
+                                                        .getSprite(
+                                                      item.value,
+                                                    ),
+                                                  ),
+                                          ),
+                                          Text(item.key),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                   ],

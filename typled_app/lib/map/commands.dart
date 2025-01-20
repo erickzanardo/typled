@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flame/game.dart';
+import 'package:typled_editor/map/cubit/map_cubit.dart';
 import 'package:typled_editor/map/typled_game.dart';
 
 abstract class Command {
@@ -15,6 +16,7 @@ abstract class Command {
     const ResetCameraCommand(),
     const PanCameraCommand(),
     const MoveCommand(),
+    const PaletteCommand(),
     const ExitCommand(),
   ];
 
@@ -22,7 +24,7 @@ abstract class Command {
   final String description;
   final String usage;
 
-  void execute(TypledGame game, List<String> args);
+  void execute(TypledGame game, MapCubit cubit, List<String> args);
 }
 
 class ZoomCommand extends Command {
@@ -34,7 +36,7 @@ class ZoomCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, List<String> args) {
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
     if (args.isEmpty) {
       return;
     }
@@ -57,7 +59,7 @@ class ResetCameraCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, List<String> args) {
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
     game.customCamera = false;
     game.setCamera();
   }
@@ -72,7 +74,7 @@ class PanCameraCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, List<String> args) {
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
     final atlas = game.loadedAtlas;
     if (args.length != 2 || atlas == null) {
       return;
@@ -100,7 +102,7 @@ class MoveCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, List<String> args) {
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
     final atlas = game.loadedAtlas;
     if (args.length != 2 || atlas == null) {
       return;
@@ -119,6 +121,20 @@ class MoveCommand extends Command {
   }
 }
 
+class PaletteCommand extends Command {
+  const PaletteCommand()
+      : super(
+          command: 'palette',
+          description: 'Toggles the palette.',
+          usage: 'palette',
+        );
+
+  @override
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
+    cubit.togglePalette();
+  }
+}
+
 class ExitCommand extends Command {
   const ExitCommand()
       : super(
@@ -128,7 +144,7 @@ class ExitCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, List<String> args) {
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
     exit(0);
   }
 }

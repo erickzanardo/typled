@@ -33,7 +33,7 @@ class MapCubit extends Cubit<MapState> {
       if (foundCommands.isNotEmpty) {
         emit(state.copyWithNewHistory(state.command));
         final foundCommand = foundCommands.first;
-        foundCommand.execute(game, args);
+        foundCommand.execute(game, this, args);
       } else {
         return SubmitCommandResult.notFound;
       }
