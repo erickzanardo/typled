@@ -1,17 +1,18 @@
 import 'dart:io';
 import 'package:archive/archive_io.dart';
-import 'package:http/http.dart' as http;
+import 'package:dart_stork_client/dart_stork_client.dart';
 import 'package:path/path.dart' as path;
 import 'package:typled_cli/src/logger.dart';
 
-const _baseGithubPath =
-    'https://github.com/erickzanardo/typled/releases/download/';
 const macosBinDownloadName = 'osx.zip';
 const macosBinName = 'typled.app';
+const macosArtifactName = 'macos';
 
-// TODO(erickzanardo): This should come from elsewhere.
-// Keep as a constant for now.
-const lastAppVersion = '0.0.1+1';
+const linuxBinDownloadName = 'linux.zip';
+const linuxBinName = 'typled';
+const linuxArtifactName = 'linux';
+
+const typledStorkAppId = 3;
 
 String _getUserHome() {
   final envVars = Platform.environment;
@@ -39,6 +40,11 @@ String _ensureAppFolder() {
   return appPath;
 }
 
+String _getVersionStampPath() {
+  final appFolder = _ensureAppFolder();
+  return path.join(appFolder, '.version');
+}
+
 String _getAppPath() {
   final appFolder = _ensureAppFolder();
   return path.join(appFolder, macosBinName);
@@ -59,22 +65,40 @@ Future<void> ensureAppIsDownloaded() async {
   if (!_isAppDownloaded()) {
     final progress = logger.progress('Downloading Typled...');
 
-    final downloadUrl = '$_baseGithubPath$lastAppVersion/$macosBinDownloadName';
+    try {
+      final client = DartStorkClient();
+      final appData = await client.getApp(typledStorkAppId);
 
-    final response = await http.get(Uri.parse(downloadUrl));
-    if (response.statusCode != 200) {
-      progress.fail('Failed to download Typled');
-      exit(1);
-    } else {
+      final version = appData.lastVersion!;
+      final appBytes = await client.downloadArtifact(
+        appId: typledStorkAppId,
+        version: version,
+        platform: Platform.isMacOS ? macosArtifactName : linuxArtifactName,
+      );
+
       final appFile =
           File(path.join(Directory.systemTemp.path, macosBinDownloadName));
-      appFile.writeAsBytesSync(response.bodyBytes);
+      appFile.writeAsBytesSync(appBytes);
 
       progress.complete('Typled downloaded');
 
       extractFileToDisk(appFile.path, _getAppFolder());
 
       appFile.deleteSync();
+
+      // On linux we need to add permission to run the bin
+      if (Platform.isLinux) {
+        final appPath = _getAppPath();
+        Process.runSync('chmod', ['+x', appPath]);
+      }
+
+      // Write version stamp
+      File(_getVersionStampPath()).writeAsStringSync(version);
+    } catch (e, s) {
+      print(e);
+      print(s);
+      progress.fail('Failed to download Typled');
+      exit(1);
     }
   }
 }

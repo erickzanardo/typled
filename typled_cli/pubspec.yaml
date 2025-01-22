@@ -12,6 +12,7 @@ environment:
 dependencies:
   archive: ^4.0.2
   args: ^2.4.2
+  dart_stork_client: ^0.0.1
   http: ^1.2.2
   mason_logger: ^0.3.1
   path: ^1.9.1

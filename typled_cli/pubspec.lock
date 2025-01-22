@@ -86,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
+  dart_stork_client:
+    dependency: "direct main"
+    description:
+      name: dart_stork_client
+      sha256: a49f36f2cba4280c3b4a706ca76734c0d0b701bad622691c9bc30eca843a515c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   ffi:
     dependency: transitive
     description:
