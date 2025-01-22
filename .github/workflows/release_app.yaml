@@ -72,8 +72,8 @@ jobs:
           app-id: ${{ secrets.STORK_APP_ID }}
           api-key: ${{ secrets.STORK_API_KEY }}
           platform: macos
-          artifact-path: osx.zip
-          fileName: typled_app/build/macos/Build/Products/Release/osx.zip
+          artifact-path: typled_app/build/macos/Build/Products/Release/osx.zip
+          fileName: osx.zip
 
           #  windows:
           #    runs-on: windows-latest
