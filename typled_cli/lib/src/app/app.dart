@@ -9,7 +9,7 @@ const macosBinName = 'typled.app';
 const macosArtifactName = 'macos';
 
 const linuxBinDownloadName = 'linux.zip';
-const linuxBinName = 'typled';
+const linuxBinName = 'typled_editor';
 const linuxArtifactName = 'linux';
 
 const typledStorkAppId = 3;
@@ -47,7 +47,13 @@ String _getVersionStampPath() {
 
 String _getAppPath() {
   final appFolder = _ensureAppFolder();
-  return path.join(appFolder, macosBinName);
+  late String binName;
+  if (Platform.isLinux) {
+    binName = path.join('bundle', linuxBinName);
+  } else if (Platform.isMacOS) {
+    binName = macosBinName;
+  }
+  return path.join(appFolder, binName);
 }
 
 bool _isAppDownloaded() {
@@ -82,7 +88,7 @@ Future<void> ensureAppIsDownloaded() async {
 
       progress.complete('Typled downloaded');
 
-      extractFileToDisk(appFile.path, _getAppFolder());
+      await extractFileToDisk(appFile.path, _getAppFolder());
 
       appFile.deleteSync();
 
