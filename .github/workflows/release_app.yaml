@@ -6,7 +6,19 @@ on:
       - '*'
 
 jobs:
+  create_version:
+    name: Create Stork Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: stork-delivery/create_version@main
+        with:
+          version: ${{ github.ref_name }}
+          app-id: ${{ secrets.STORK_APP_ID }}
+          api-key: ${{ secrets.STORK_API_KEY }}
+
   linux:
+    needs: [create_version]
     runs-on: ubuntu-latest
 
     defaults:
@@ -26,13 +38,18 @@ jobs:
         with:
           files: typled_app/build/linux/x64/release/bundle/
           dest: linux.zip
-      - name: Upload binary
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux
-          path: linux.zip
+     - name: Upload Binary
+       uses: stork-delivery/upload_artifact@main
+       with:
+         version: ${{ github.ref_name }}
+         app-id: ${{ secrets.STORK_APP_ID }}
+         api-key: ${{ secrets.STORK_API_KEY }}
+         platform: linux
+         artifact-path: linux.zip
+         fileName: linux.zip
 
   mac:
+    needs: [create_version]
     runs-on: macos-latest
 
     defaults:
@@ -48,11 +65,15 @@ jobs:
       - run: flutter build macos
       - name: Zips the build
         run: cd build/macos/Build/Products/Release/ && zip -r osx.zip typled.app
-      - name: Upload binary
-        uses: actions/upload-artifact@v4
-        with:
-          name: osx
-          path: typled_app/build/macos/Build/Products/Release/osx.zip
+     - name: Upload Binary
+       uses: stork-delivery/upload_artifact@main
+       with:
+         version: ${{ github.ref_name }}
+         app-id: ${{ secrets.STORK_APP_ID }}
+         api-key: ${{ secrets.STORK_API_KEY }}
+         platform: macos
+         artifact-path: osx.zip
+         fileName: typled_app/build/macos/Build/Products/Release/osx.zip
 
           #  windows:
           #    runs-on: windows-latest
@@ -79,33 +100,3 @@ jobs:
           #        with:
           #          name: fa_windows
           #          path: fa_windows.zip
-
-  release_desktop:
-    needs: [mac]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download Linux artifact
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: linux
-
-      - name: Download Mac artifact
-        uses: actions/download-artifact@v4.1.7
-        with:
-          name: osx
-
-          #      - name: Download Windows artifact
-          #        uses: actions/download-artifact@v4.1.7
-          #        with:
-          #          name: fa_windows
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: |
-            osx.zip
-            linux.zip
-          prerelease: true
