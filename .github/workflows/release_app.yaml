@@ -34,10 +34,7 @@ jobs:
       - run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
       - run: flutter build linux
       - name: Zips the build
-        uses: papeloto/action-zip@v1
-        with:
-          files: typled_app/build/linux/x64/release/bundle/
-          dest: linux.zip
+        run: cd build/linux/x64/release && zip -r linux.zip bundle
       - name: Upload Binary
         uses: stork-delivery/upload_artifact@main
         with:
@@ -45,7 +42,7 @@ jobs:
           app-id: ${{ secrets.STORK_APP_ID }}
           api-key: ${{ secrets.STORK_API_KEY }}
           platform: linux
-          artifact-path: linux.zip
+          artifact-path: typled_app/build/linux/x64/release/linux.zip
           fileName: linux.zip
 
   mac:
