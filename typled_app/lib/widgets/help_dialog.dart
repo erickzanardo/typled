@@ -3,19 +3,27 @@ import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/map/commands.dart';
 
 class HelpDialog extends StatelessWidget {
-  const HelpDialog({super.key});
+  const HelpDialog({
+    required this.commands,
+    super.key,
+  });
 
-  static Future<void> show(BuildContext context) async {
+  final List<MapCommand> commands;
+
+  static Future<void> show(
+    BuildContext context, {
+    required List<MapCommand> commands,
+  }) async {
     await NesDialog.show(
       context: context,
-      builder: (context) => const HelpDialog(),
+      builder: (context) => HelpDialog(
+        commands: commands,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final commands = Command.commands;
-
     return SizedBox(
       width: 480,
       height: 620,

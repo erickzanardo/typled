@@ -3,15 +3,16 @@ import 'dart:io';
 import 'package:flame/game.dart';
 import 'package:typled_editor/map/cubit/map_cubit.dart';
 import 'package:typled_editor/map/typled_game.dart';
+import 'package:typled_editor/prompt/prompt_command.dart';
 
-abstract class Command {
-  const Command({
-    required this.command,
-    required this.description,
-    required this.usage,
+abstract class MapCommand extends Command<(MapCubit, TypledGame)> {
+  const MapCommand({
+    required super.command,
+    required super.description,
+    required super.usage,
   });
 
-  static final List<Command> commands = [
+  static final List<MapCommand> commands = [
     const ZoomCommand(),
     const ResetCameraCommand(),
     const PanCameraCommand(),
@@ -20,15 +21,9 @@ abstract class Command {
     const TileGridCommand(),
     const ExitCommand(),
   ];
-
-  final String command;
-  final String description;
-  final String usage;
-
-  void execute(TypledGame game, MapCubit cubit, List<String> args);
 }
 
-class ZoomCommand extends Command {
+class ZoomCommand extends MapCommand {
   const ZoomCommand()
       : super(
           command: 'zoom',
@@ -37,7 +32,7 @@ class ZoomCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
     if (args.isEmpty) {
       return;
     }
@@ -45,13 +40,13 @@ class ZoomCommand extends Command {
     final zoom = double.tryParse(args.first);
 
     if (zoom != null) {
-      game.customCamera = true;
-      game.camera.viewfinder.zoom = zoom;
+      subject.$2.customCamera = true;
+      subject.$2.camera.viewfinder.zoom = zoom;
     }
   }
 }
 
-class ResetCameraCommand extends Command {
+class ResetCameraCommand extends MapCommand {
   const ResetCameraCommand()
       : super(
           command: 'reset_camera',
@@ -60,13 +55,13 @@ class ResetCameraCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
-    game.customCamera = false;
-    game.setCamera();
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+    subject.$2.customCamera = false;
+    subject.$2.setCamera();
   }
 }
 
-class PanCameraCommand extends Command {
+class PanCameraCommand extends MapCommand {
   const PanCameraCommand()
       : super(
           command: 'pan',
@@ -75,8 +70,8 @@ class PanCameraCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
-    final atlas = game.loadedAtlas;
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+    final atlas = subject.$2.loadedAtlas;
     if (args.length != 2 || atlas == null) {
       return;
     }
@@ -85,8 +80,8 @@ class PanCameraCommand extends Command {
     final y = double.tryParse(args[1]);
 
     if (x != null && y != null) {
-      game.customCamera = true;
-      game.camera.viewfinder.position += Vector2(
+      subject.$2.customCamera = true;
+      subject.$2.camera.viewfinder.position += Vector2(
         x * atlas.tileWidth,
         y * atlas.tileHeight,
       );
@@ -94,7 +89,7 @@ class PanCameraCommand extends Command {
   }
 }
 
-class MoveCommand extends Command {
+class MoveCommand extends MapCommand {
   const MoveCommand()
       : super(
           command: 'move',
@@ -103,8 +98,8 @@ class MoveCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
-    final atlas = game.loadedAtlas;
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+    final atlas = subject.$2.loadedAtlas;
     if (args.length != 2 || atlas == null) {
       return;
     }
@@ -113,8 +108,8 @@ class MoveCommand extends Command {
     final y = double.tryParse(args[1]);
 
     if (x != null && y != null) {
-      game.customCamera = true;
-      game.camera.viewfinder.position = Vector2(
+      subject.$2.customCamera = true;
+      subject.$2.camera.viewfinder.position = Vector2(
         x * atlas.tileWidth,
         y * atlas.tileHeight,
       );
@@ -122,7 +117,7 @@ class MoveCommand extends Command {
   }
 }
 
-class PaletteCommand extends Command {
+class PaletteCommand extends MapCommand {
   const PaletteCommand()
       : super(
           command: 'palette',
@@ -131,12 +126,12 @@ class PaletteCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
-    cubit.togglePalette();
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+    subject.$1.togglePalette();
   }
 }
 
-class ExitCommand extends Command {
+class ExitCommand extends MapCommand {
   const ExitCommand()
       : super(
           command: 'q',
@@ -145,12 +140,12 @@ class ExitCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
     exit(0);
   }
 }
 
-class TileGridCommand extends Command {
+class TileGridCommand extends MapCommand {
   const TileGridCommand()
       : super(
           command: 'grid',
@@ -159,7 +154,7 @@ class TileGridCommand extends Command {
         );
 
   @override
-  void execute(TypledGame game, MapCubit cubit, List<String> args) {
-    game.tileGrid.value = !game.tileGrid.value;
+  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+    subject.$2.tileGrid.value = !subject.$2.tileGrid.value;
   }
 }
