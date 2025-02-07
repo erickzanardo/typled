@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nes_ui/nes_ui.dart';
-import 'package:typled_editor/map/commands.dart';
+import 'package:typled_editor/prompt/prompt_command.dart';
 
 class HelpDialog extends StatelessWidget {
   const HelpDialog({
@@ -8,11 +8,11 @@ class HelpDialog extends StatelessWidget {
     super.key,
   });
 
-  final List<MapCommand> commands;
+  final List<Command> commands;
 
   static Future<void> show(
     BuildContext context, {
-    required List<MapCommand> commands,
+    required List<Command> commands,
   }) async {
     await NesDialog.show(
       context: context,

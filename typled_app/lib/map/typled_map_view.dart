@@ -41,7 +41,7 @@ class _TypledMapViewState extends State<TypledMapView> {
   @override
   Widget build(BuildContext context) {
     if (!widget.showInfo) {
-      return GameWidget(game: _game);
+      return GameWidget(game: _game, autofocus: false);
     }
     return BlocProvider(
       create: (context) => MapCubit(),
