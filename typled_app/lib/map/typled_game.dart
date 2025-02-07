@@ -11,6 +11,7 @@ import 'package:nes_ui/nes_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:typled/typled.dart';
 import 'package:typled_editor/extensions/color.dart';
+import 'package:typled_editor/map/components/components.dart';
 
 class TypledGame extends FlameGame {
   TypledGame({required String basePath, required String filePath})
@@ -28,6 +29,7 @@ class TypledGame extends FlameGame {
   StreamSubscription<FileSystemEvent>? _atlasSubscription;
 
   bool customCamera = false;
+  final tileGrid = ValueNotifier(false);
 
   @override
   FutureOr<void> onLoad() async {
@@ -42,6 +44,8 @@ class TypledGame extends FlameGame {
     _subscription = _file.watch().listen((event) {
       _build();
     });
+
+    tileGrid.addListener(_onTileGridChanged);
   }
 
   @override
@@ -57,6 +61,11 @@ class TypledGame extends FlameGame {
 
     _subscription.cancel();
     _atlasSubscription?.cancel();
+    tileGrid.removeListener(_onTileGridChanged);
+  }
+
+  void _onTileGridChanged() {
+    _build();
   }
 
   Future<void> _build() async {
@@ -125,6 +134,32 @@ class TypledGame extends FlameGame {
             } catch (e) {
               errors.add(e.toString());
             }
+          }
+        }
+      }
+
+      if (tileGrid.value) {
+        for (var y = 0; y < currentTypled.height; y++) {
+          for (var x = 0; x < currentTypled.width; x++) {
+            world.add(
+              RectangleComponent(
+                size: Vector2(currentAtlas.tileWidth.toDouble(),
+                    currentAtlas.tileHeight.toDouble()),
+                position: Vector2(x.toDouble() * currentAtlas.tileWidth,
+                    y.toDouble() * currentAtlas.tileHeight),
+                paint: Paint()
+                  ..color = Colors.white
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 0,
+                children: [
+                  GameText(
+                    position: Vector2.all(2),
+                    text: '$x-$y',
+                    fontSize: 2,
+                  ),
+                ],
+              ),
+            );
           }
         }
       }

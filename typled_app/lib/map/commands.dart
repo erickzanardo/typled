@@ -17,6 +17,7 @@ abstract class Command {
     const PanCameraCommand(),
     const MoveCommand(),
     const PaletteCommand(),
+    const TileGridCommand(),
     const ExitCommand(),
   ];
 
@@ -146,5 +147,19 @@ class ExitCommand extends Command {
   @override
   void execute(TypledGame game, MapCubit cubit, List<String> args) {
     exit(0);
+  }
+}
+
+class TileGridCommand extends Command {
+  const TileGridCommand()
+      : super(
+          command: 'grid',
+          description: 'Toggles the tile grid.',
+          usage: 'grid',
+        );
+
+  @override
+  void execute(TypledGame game, MapCubit cubit, List<String> args) {
+    game.tileGrid.value = !game.tileGrid.value;
   }
 }
