@@ -1,6 +1,6 @@
 name: typled_cli
 description: CLI tool for the typled map editor.
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/erickzanardo/typled
 
 executables:
