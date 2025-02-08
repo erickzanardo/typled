@@ -109,6 +109,23 @@ Future<void> ensureAppIsDownloaded() async {
   }
 }
 
+void deleteEditorApp() {
+  // Delete the app folder
+  final appFolder = _getAppFolder();
+  final appDir = Directory(appFolder);
+  if (appDir.existsSync()) {
+    appDir.deleteSync(recursive: true);
+  }
+}
+
+String currentVersion() {
+  final versionFile = File(_getVersionStampPath());
+  if (!versionFile.existsSync()) {
+    return 'Not installed';
+  }
+  return versionFile.readAsStringSync();
+}
+
 void openFile(String filePath) {
   final appPath = _getAppPath();
 
