@@ -51,115 +51,111 @@ class _TypledGridState extends State<TypledGridView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NesScaffold(
-        body: BlocProvider<GridCubit>(
-          create: (context) => GridCubit(),
-          child: BlocBuilder<GridCubit, GridState>(
-            builder: (context, state) {
-              return Column(
-                children: [
-                  Expanded(
-                    child: FutureBuilder(
-                      future: _typledGrid,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final typledGrid = snapshot.data as TypledGrid;
+    return BlocProvider<GridCubit>(
+      create: (context) => GridCubit(),
+      child: BlocBuilder<GridCubit, GridState>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              Expanded(
+                child: FutureBuilder(
+                  future: _typledGrid,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final typledGrid = snapshot.data as TypledGrid;
 
-                          return LayoutBuilder(builder: (context, constraints) {
-                            final totalWidth =
-                                typledGrid.gridWidth * typledGrid.cellWidth;
-                            final totalHeight =
-                                typledGrid.gridHeight * typledGrid.cellHeight;
+                      return LayoutBuilder(builder: (context, constraints) {
+                        final totalWidth =
+                            typledGrid.gridWidth * typledGrid.cellWidth;
+                        final totalHeight =
+                            typledGrid.gridHeight * typledGrid.cellHeight;
 
-                            final scale = math.min(
-                              constraints.maxWidth / totalWidth,
-                              constraints.maxHeight / totalHeight,
-                            );
+                        final scale = math.min(
+                          constraints.maxWidth / totalWidth,
+                          constraints.maxHeight / totalHeight,
+                        );
 
-                            final state = context.watch<GridCubit>().state;
+                        final state = context.watch<GridCubit>().state;
 
-                            return Stack(
-                              children: [
-                                for (final cell in typledGrid.cells.entries)
-                                  Builder(builder: (context) {
-                                    final view = TypledMapView(
-                                      showInfo: false,
-                                      basePath: widget.basePath,
-                                      file: cell.value,
-                                    );
+                        return Stack(
+                          children: [
+                            for (final cell in typledGrid.cells.entries)
+                              Builder(builder: (context) {
+                                final view = TypledMapView(
+                                  showInfo: false,
+                                  basePath: widget.basePath,
+                                  file: cell.value,
+                                );
 
-                                    return Positioned(
-                                      left: (cell.key.$1 * typledGrid.cellWidth)
-                                              .toDouble() *
-                                          scale,
-                                      top: (cell.key.$2 * typledGrid.cellHeight)
-                                              .toDouble() *
-                                          scale,
-                                      width: typledGrid.cellWidth.toDouble() *
-                                          scale,
-                                      height: typledGrid.cellHeight.toDouble() *
-                                          scale,
-                                      child: state.gridEnabled
-                                          ? Stack(
-                                              children: [
-                                                view,
-                                                Positioned(
-                                                  top: 0,
-                                                  left: 0,
-                                                  width: typledGrid.cellWidth
-                                                          .toDouble() *
-                                                      scale,
-                                                  height: typledGrid.cellHeight
-                                                          .toDouble() *
-                                                      scale,
-                                                  child: DecoratedBox(
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
+                                return Positioned(
+                                  left: (cell.key.$1 * typledGrid.cellWidth)
+                                          .toDouble() *
+                                      scale,
+                                  top: (cell.key.$2 * typledGrid.cellHeight)
+                                          .toDouble() *
+                                      scale,
+                                  width:
+                                      typledGrid.cellWidth.toDouble() * scale,
+                                  height:
+                                      typledGrid.cellHeight.toDouble() * scale,
+                                  child: state.gridEnabled
+                                      ? Stack(
+                                          children: [
+                                            view,
+                                            Positioned(
+                                              top: 0,
+                                              left: 0,
+                                              width: typledGrid.cellWidth
+                                                      .toDouble() *
+                                                  scale,
+                                              height: typledGrid.cellHeight
+                                                      .toDouble() *
+                                                  scale,
+                                              child: DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.white,
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  top: 4,
-                                                  left: 4,
-                                                  child: Text(
-                                                    '${cell.key.$1}, ${cell.key.$2}: ${cell.value}',
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 8,
-                                                    ),
-                                                  ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: 4,
+                                              left: 4,
+                                              child: Text(
+                                                '${cell.key.$1}, ${cell.key.$2}: ${cell.value}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 8,
                                                 ),
-                                              ],
-                                            )
-                                          : view,
-                                    );
-                                  })
-                              ],
-                            );
-                          });
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  ),
-                  CommandPrompt(
-                    commands: GridCommand.commands,
-                    onSubmitCommand: (command, args) {
-                      command.execute(context.read<GridCubit>(), args);
-                    },
-                    onShowHelp: (context) {
-                      HelpDialog.show(context, commands: GridCommand.commands);
-                    },
-                    basePath: widget.basePath.homeReplaced,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : view,
+                                );
+                              })
+                          ],
+                        );
+                      });
+                    }
+                    return const SizedBox();
+                  },
+                ),
+              ),
+              CommandPrompt(
+                commands: GridCommand.commands,
+                onSubmitCommand: (command, args) {
+                  command.execute(context.read<GridCubit>(), args);
+                },
+                onShowHelp: (context) {
+                  HelpDialog.show(context, commands: GridCommand.commands);
+                },
+                basePath: widget.basePath.homeReplaced,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

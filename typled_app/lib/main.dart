@@ -6,6 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/grid/grid.dart';
 import 'package:typled_editor/map/map.dart';
+import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
+import 'package:typled_editor/workspace/view/workspace_view.dart';
 
 void main(List<String> args) {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,26 +20,13 @@ void main(List<String> args) {
   final basePath = args[0];
   final file = args[1];
 
-  late Widget child;
-
-  if (path.extension(file) == '.typled') {
-    child = Scaffold(
-      body: NesScaffold(
-        body: TypledMapView(
-          basePath: basePath,
-          file: file,
-        ),
-      ),
-    );
-  } else if (path.extension(file) == '.typled_grid') {
-    child = TypledGridView(
-      basePath: basePath,
-      file: file,
-    );
-  } else {
+  const knownExtensions = ['.typled', '.typled_grid'];
+  if (!knownExtensions.contains(path.extension(file))) {
     print('Unknown file extension: ${path.extension(file)}');
     exit(1);
   }
+
+  final entry = FileEntry(file: file, basePath: basePath);
 
   final theme = flutterNesTheme(
     brightness: Brightness.dark,
@@ -52,7 +41,10 @@ void main(List<String> args) {
   runApp(
     MaterialApp(
       theme: theme,
-      home: child,
+      home: WorkspaceView(
+        initialFiles: [entry],
+        initialCurrentFile: entry,
+      ),
     ),
   );
 }
