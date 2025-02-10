@@ -11,6 +11,8 @@ class FileEntry extends Equatable {
 
   @override
   List<Object?> get props => [file, basePath];
+
+  get basename => path.basename(file);
 }
 
 class WorkspaceState extends Equatable {

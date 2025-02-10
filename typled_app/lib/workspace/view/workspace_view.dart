@@ -41,7 +41,22 @@ class WorkspaceViewContent extends StatelessWidget {
                 ? const Center(child: Text('No files'))
                 : Column(
                     children: [
-                      if (state.files.length > 1) Row(),
+                      if (state.files.length > 1)
+                        Row(
+                          children: [
+                            for (final entry in state.files)
+                              ColoredBox(
+                                color: entry == state.currentFile
+                                    ? Colors.blue.shade900
+                                    : Colors.blue,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Text(entry.basename),
+                                ),
+                              ),
+                          ],
+                        ),
                       Expanded(
                         child: Builder(
                           builder: (context) {

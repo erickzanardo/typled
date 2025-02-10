@@ -11,6 +11,7 @@ abstract class GridCommand extends Command<(GridCubit, WorkspaceCubit)> {
 
   static List<GridCommand> commands = [
     const TileGridCommand(),
+    const OpenMapCommand(),
   ];
 }
 
@@ -33,14 +34,24 @@ class OpenMapCommand extends GridCommand {
       : super(
           command: 'open',
           description: 'Opens the map.',
-          usage: 'open',
+          usage: 'open cellX cellY',
         );
 
   @override
   void execute((GridCubit, WorkspaceCubit) subject, List<String> args) {
-    final x = double.tryParse(args[0]);
-    final y = double.tryParse(args[1]);
+    final x = int.tryParse(args[0]);
+    final y = int.tryParse(args[1]);
 
-    if (x != null && y != null) {}
+    if (x != null && y != null) {
+      final filePath = subject.$1.cellPath(x, y);
+      if (filePath != null) {
+        subject.$2.openFile(
+          FileEntry(
+            file: filePath,
+            basePath: subject.$2.state.currentFile!.basePath,
+          ),
+        );
+      }
+    }
   }
 }

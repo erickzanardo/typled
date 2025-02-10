@@ -9,6 +9,7 @@ enum SubmitCommandResult {
   handled,
   help,
   quit,
+  tab,
   notFound,
 }
 
@@ -79,6 +80,8 @@ class PromptCubit<T> extends Cubit<PromptState> {
     ));
   }
 
+  List<String> get args => state.command.split(' ').sublist(1);
+
   SubmitCommandResult submitCommand() {
     final parts = state.command.split(' ');
 
@@ -92,6 +95,10 @@ class PromptCubit<T> extends Cubit<PromptState> {
 
       if (command == 'q') {
         return SubmitCommandResult.quit;
+      }
+
+      if (command == 't') {
+        return SubmitCommandResult.tab;
       }
 
       final foundCommands = commands.where(

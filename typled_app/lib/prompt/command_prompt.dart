@@ -50,6 +50,10 @@ class CommandPrompt<T> extends StatelessWidget {
                   } else if (result == SubmitCommandResult.help) {
                     context.read<PromptCubit<T>>().clearCommand();
                     onShowHelp(context);
+                  } else if (result == SubmitCommandResult.tab) {
+                    final cubit = context.read<PromptCubit<T>>();
+                    context.read<WorkspaceCubit>().handleTabCommand(cubit.args);
+                    cubit.clearCommand();
                   }
                 } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
                   context.read<PromptCubit<T>>().searchHistoryUp();

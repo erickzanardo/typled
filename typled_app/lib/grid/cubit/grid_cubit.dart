@@ -24,4 +24,8 @@ class GridCubit extends Cubit<GridState> {
     final fileContent = await file.readAsString();
     return TypledGrid.parse(fileContent);
   }
+
+  String? cellPath(int x, int y) {
+    return state.grid?.cells[(x, y)];
+  }
 }
