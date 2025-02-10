@@ -8,6 +8,7 @@ part 'prompt_state.dart';
 enum SubmitCommandResult {
   handled,
   help,
+  quit,
   notFound,
 }
 
@@ -85,8 +86,12 @@ class PromptCubit<T> extends Cubit<PromptState> {
       final command = parts.first;
       final args = parts.sublist(1);
 
-      if (command == 'help') {
+      if (command == 'h') {
         return SubmitCommandResult.help;
+      }
+
+      if (command == 'q') {
+        return SubmitCommandResult.quit;
       }
 
       final foundCommands = commands.where(
@@ -108,5 +113,15 @@ class PromptCubit<T> extends Cubit<PromptState> {
       return SubmitCommandResult.handled;
     }
     return SubmitCommandResult.notFound;
+  }
+
+  void clearCommand() {
+    emit(
+      state.copyWith(
+        commandMode: false,
+        commandHistoryIndex: state.commandHistory.length,
+        command: '',
+      ),
+    );
   }
 }

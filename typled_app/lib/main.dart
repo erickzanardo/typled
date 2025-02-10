@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:nes_ui/nes_ui.dart';
-import 'package:typled_editor/grid/grid.dart';
-import 'package:typled_editor/map/map.dart';
 import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 import 'package:typled_editor/workspace/view/workspace_view.dart';
 

@@ -31,6 +31,27 @@ class HelpDialog extends StatelessWidget {
         child: Column(
           spacing: 8,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'q',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    'Quit the editor',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'USAGE: q',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
             for (final command in commands)
               Padding(
                 padding: const EdgeInsets.all(8.0),

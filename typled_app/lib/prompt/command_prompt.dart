@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/prompt/cubit/prompt_cubit.dart';
 import 'package:typled_editor/prompt/prompt_command.dart';
+import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 
 class CommandPrompt<T> extends StatelessWidget {
   const CommandPrompt({
@@ -43,7 +44,11 @@ class CommandPrompt<T> extends StatelessWidget {
                         text: 'Unknown command',
                       ),
                     );
+                  } else if (result == SubmitCommandResult.quit) {
+                    context.read<PromptCubit<T>>().clearCommand();
+                    context.read<WorkspaceCubit>().quit();
                   } else if (result == SubmitCommandResult.help) {
+                    context.read<PromptCubit<T>>().clearCommand();
                     onShowHelp(context);
                   }
                 } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {

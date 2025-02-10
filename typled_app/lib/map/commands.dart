@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flame/game.dart';
 import 'package:typled_editor/map/cubit/map_cubit.dart';
 import 'package:typled_editor/map/typled_game.dart';
@@ -19,7 +17,6 @@ abstract class MapCommand extends Command<(MapCubit, TypledGame)> {
     const MoveCommand(),
     const PaletteCommand(),
     const TileGridCommand(),
-    const ExitCommand(),
   ];
 }
 
@@ -128,20 +125,6 @@ class PaletteCommand extends MapCommand {
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
     subject.$1.togglePalette();
-  }
-}
-
-class ExitCommand extends MapCommand {
-  const ExitCommand()
-      : super(
-          command: 'q',
-          description: 'Exits the editor.',
-          usage: 'q',
-        );
-
-  @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
-    exit(0);
   }
 }
 
