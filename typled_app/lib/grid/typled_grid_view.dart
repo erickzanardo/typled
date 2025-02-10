@@ -11,6 +11,7 @@ import 'package:typled_editor/grid/cubit/grid_cubit.dart';
 import 'package:typled_editor/map/map.dart';
 import 'package:typled_editor/prompt/command_prompt.dart';
 import 'package:typled_editor/widgets/help_dialog.dart';
+import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 
 class TypledGridView extends StatefulWidget {
   const TypledGridView({
@@ -145,7 +146,13 @@ class _TypledGridState extends State<TypledGridView> {
               CommandPrompt(
                 commands: GridCommand.commands,
                 onSubmitCommand: (command, args) {
-                  command.execute(context.read<GridCubit>(), args);
+                  command.execute(
+                    (
+                      context.read<GridCubit>(),
+                      context.read<WorkspaceCubit>(),
+                    ),
+                    args,
+                  );
                 },
                 onShowHelp: (context) {
                   HelpDialog.show(context, commands: GridCommand.commands);
