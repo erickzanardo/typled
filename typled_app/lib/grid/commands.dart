@@ -41,8 +41,6 @@ class OpenMapCommand extends GridCommand {
     final x = double.tryParse(args[0]);
     final y = double.tryParse(args[1]);
 
-    if (x != null && y != null) {
-      subject.$2.openMap(x, y);
-    }
+    if (x != null && y != null) {}
   }
 }
