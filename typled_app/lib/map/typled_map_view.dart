@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flame/game.dart';
 import 'package:flame/widgets.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +13,20 @@ import 'package:typled_editor/prompt/command_prompt.dart';
 import 'package:typled_editor/widgets/help_dialog.dart';
 
 class TypledMapView extends StatefulWidget {
-  const TypledMapView(
-      {required this.basePath,
-      required this.file,
-      this.showInfo = true,
-      super.key});
+  const TypledMapView({
+    required this.basePath,
+    required this.file,
+    this.showInfo = true,
+    this.relativeGridPosition,
+    this.parentGridEnabled,
+    super.key,
+  });
 
   final String basePath;
   final String file;
   final bool showInfo;
+  final (int, int)? relativeGridPosition;
+  final Stream<bool>? parentGridEnabled;
 
   @override
   State<TypledMapView> createState() => _TypledMapViewState();
@@ -27,6 +34,7 @@ class TypledMapView extends StatefulWidget {
 
 class _TypledMapViewState extends State<TypledMapView> {
   late final TypledGame _game;
+  StreamSubscription<bool>? _parentGridSubscription;
 
   @override
   void initState() {
@@ -35,7 +43,20 @@ class _TypledMapViewState extends State<TypledMapView> {
     _game = TypledGame(
       basePath: widget.basePath,
       filePath: widget.file,
+      relativeGridPosition: widget.relativeGridPosition,
     );
+
+    _parentGridSubscription = widget.parentGridEnabled?.listen((enabled) {
+      if (_game.tileGrid.value != enabled) {
+        _game.tileGrid.value = enabled;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _parentGridSubscription?.cancel();
+    super.dispose();
   }
 
   @override

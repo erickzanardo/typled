@@ -14,12 +14,17 @@ import 'package:typled_editor/extensions/color.dart';
 import 'package:typled_editor/map/components/components.dart';
 
 class TypledGame extends FlameGame {
-  TypledGame({required String basePath, required String filePath})
+  TypledGame(
+      {required String basePath,
+      required String filePath,
+      (int, int)? relativeGridPosition})
       : _basePath = basePath,
-        _filePath = filePath;
+        _filePath = filePath,
+        _relativeGridPosition = relativeGridPosition;
 
   final String _basePath;
   final String _filePath;
+  final (int, int)? _relativeGridPosition;
 
   late final File _file;
   FireAtlas? loadedAtlas;
@@ -138,23 +143,34 @@ class TypledGame extends FlameGame {
         }
       }
 
+      // Thid is triggering twice
       if (tileGrid.value) {
+        final color =
+            _relativeGridPosition == null ? Colors.white : Colors.grey;
         for (var y = 0; y < currentTypled.height; y++) {
           for (var x = 0; x < currentTypled.width; x++) {
+            final labelX = x + (_relativeGridPosition?.$1 ?? 0);
+            final labelY = y + (_relativeGridPosition?.$2 ?? 0);
             world.add(
               RectangleComponent(
-                size: Vector2(currentAtlas.tileWidth.toDouble(),
-                    currentAtlas.tileHeight.toDouble()),
-                position: Vector2(x.toDouble() * currentAtlas.tileWidth,
-                    y.toDouble() * currentAtlas.tileHeight),
+                priority: 100,
+                size: Vector2(
+                  currentAtlas.tileWidth.toDouble(),
+                  currentAtlas.tileHeight.toDouble(),
+                ),
+                position: Vector2(
+                  x.toDouble() * currentAtlas.tileWidth,
+                  y.toDouble() * currentAtlas.tileHeight,
+                ),
                 paint: Paint()
-                  ..color = Colors.white
+                  ..color = color
                   ..style = PaintingStyle.stroke
                   ..strokeWidth = 0,
                 children: [
                   GameText(
                     position: Vector2.all(2),
-                    text: '$x-$y',
+                    text: '$labelX-$labelY',
+                    color: color,
                     fontSize: 2,
                   ),
                 ],

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:typled/typled.dart';
 import 'package:typled_editor/extensions/extensions.dart';
 import 'package:typled_editor/grid/commands.dart';
 import 'package:typled_editor/grid/cubit/grid_cubit.dart';
@@ -56,55 +57,13 @@ class _TypledGridState extends State<TypledGridView> {
                   return Stack(
                     children: [
                       for (final cell in grid.cells.entries)
-                        Builder(builder: (context) {
-                          final view = TypledMapView(
-                            showInfo: false,
-                            basePath: widget.basePath,
-                            file: cell.value,
-                          );
-
-                          return Positioned(
-                            left: (cell.key.$1 * grid.cellWidth).toDouble() *
-                                scale,
-                            top: (cell.key.$2 * grid.cellHeight).toDouble() *
-                                scale,
-                            width: grid.cellWidth.toDouble() * scale,
-                            height: grid.cellHeight.toDouble() * scale,
-                            child: state.gridEnabled
-                                ? Stack(
-                                    children: [
-                                      view,
-                                      Positioned(
-                                        top: 0,
-                                        left: 0,
-                                        width:
-                                            grid.cellWidth.toDouble() * scale,
-                                        height:
-                                            grid.cellHeight.toDouble() * scale,
-                                        child: DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 4,
-                                        left: 4,
-                                        child: Text(
-                                          '${cell.key.$1}, ${cell.key.$2}: ${cell.value}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 8,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : view,
-                          );
-                        })
+                        _MapView(
+                          basePath: widget.basePath,
+                          file: widget.file,
+                          cell: cell,
+                          scale: scale,
+                          grid: grid,
+                        ),
                     ],
                   );
                 }),
@@ -128,6 +87,78 @@ class _TypledGridState extends State<TypledGridView> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _MapView extends StatelessWidget {
+  final String basePath;
+  final String file;
+  final MapEntry<(int, int), String> cell;
+  final double scale;
+  final TypledGrid grid;
+
+  const _MapView({
+    required this.basePath,
+    required this.file,
+    required this.cell,
+    required this.scale,
+    required this.grid,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<GridCubit>();
+    final state = cubit.state;
+
+    return Positioned(
+      left: (cell.key.$1 * grid.cellWidth).toDouble() * scale,
+      top: (cell.key.$2 * grid.cellHeight).toDouble() * scale,
+      width: grid.cellWidth.toDouble() * scale,
+      height: grid.cellHeight.toDouble() * scale,
+      child: Stack(
+        children: [
+          TypledMapView(
+            key: ValueKey(cell.value),
+            showInfo: false,
+            basePath: basePath,
+            file: cell.value,
+            relativeGridPosition: (
+              cell.key.$1 * grid.cellWidth,
+              cell.key.$2 * grid.cellHeight,
+            ),
+            parentGridEnabled: cubit.stream.map(
+              (state) => state.gridEnabled,
+            ),
+          ),
+          if (state.gridEnabled) ...[
+            Positioned(
+              top: 0,
+              left: 0,
+              width: grid.cellWidth.toDouble() * scale,
+              height: grid.cellHeight.toDouble() * scale,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 18,
+              left: 4,
+              child: Text(
+                '${cell.key.$1}, ${cell.key.$2}: ${cell.value}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
