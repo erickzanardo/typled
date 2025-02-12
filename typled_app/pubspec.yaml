@@ -3,7 +3,7 @@ description: "Typled Editor."
 
 publish_to: 'none'
 
-version: 0.0.4+0
+version: 0.0.5+0
 
 environment:
   sdk: ^3.5.1
