@@ -2,15 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flame_fire_atlas/flame_fire_atlas.dart';
 import 'package:flutter/material.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:typled/typled.dart';
 import 'package:typled_editor/extensions/color.dart';
+import 'package:typled_editor/map/atlas_provider.dart';
 import 'package:typled_editor/map/components/components.dart';
 
 class TypledGame extends FlameGame {
@@ -27,7 +26,7 @@ class TypledGame extends FlameGame {
   final (int, int)? _relativeGridPosition;
 
   late final File _file;
-  FireAtlas? loadedAtlas;
+  AtlasProvider? loadedAtlas;
   Typled? loadedTypled;
 
   late final StreamSubscription<FileSystemEvent> _subscription;
@@ -85,9 +84,8 @@ class TypledGame extends FlameGame {
 
       final atlasPath = path.join(_basePath, currentTypled.atlas);
       final atlasFile = File(atlasPath);
-      final atlasBytes = await atlasFile.readAsBytes();
-      final currentAtlas = FireAtlas.deserializeBytes(atlasBytes);
-      await currentAtlas.loadImage(images: Images());
+      final currentAtlas =
+          await AtlasProvider.load(file: atlasFile, basePath: _basePath);
 
       if (currentTypled.backgroundColor != null) {
         try {

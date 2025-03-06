@@ -1,0 +1,8 @@
+[atlas]
+imagePath = mini-dungeon.png
+tileSize = 8
+
+[sprites]
+top_middle_dirt = 1, 0
+green_globin = 0, 4
+red_globin = 1, 4

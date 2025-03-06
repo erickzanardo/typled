@@ -1,0 +1,22 @@
+[map]
+name = Test map
+width = 12 
+height = 8 
+atlas = mini-dungeon.typled_atlas
+
+[palette]
+_ = EMPTY
+
+m = top_middle_dirt
+G = green_globin
+R = red_globin
+
+[layer]
+____________
+____________
+____________
+____________
+____________
+____________
+_____G___R__
+mmmmmmmmmmmm
