@@ -7,7 +7,7 @@
    - [Usage](#usage)
  - [File formats](#file-formats)
    - [Map](#map)
-   - Grid
+   - [Grid](#grid)
    - Atlas
  - Using the Dart package
 
@@ -106,3 +106,19 @@ This represents a mapping where the value before the `=` is the character to be 
 A layer should be a text where the line length is equal to the `width` of the file and `height` equal to the number of lines.
 
 A map can have multiple layers and they will be rendered on top of each other on the order that they appear on the file.
+
+### Grid
+
+This file defines a grid of maps, where each cell of the grid is an individual typled map. It uses a simpler format than the map, where each line of the file defines a thing, example:
+
+```
+2,1
+20,12
+0, 0: 1.typled
+1, 0: 2.typled
+```
+
+Where, the lines, in the order that they appear are:
+ - Size of the grid, in the example above it has two maps wide per one tall
+ - The grid size of each individual map in the grid (the maps of a grid should have the same values as seem here)
+ - All the remaining lines defines which map is in each cell, where the value before the `:` is the coordinate in the grid and the value after is the path to the `typled` file for that cell.
