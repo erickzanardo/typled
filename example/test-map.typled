@@ -7,7 +7,9 @@ atlas = mini-dungeon.typled_atlas
 [palette]
 _ = EMPTY
 
+a = top_left_dirt
 m = top_middle_dirt
+s = top_right_dirt
 G = green_globin
 R = red_globin
 
@@ -17,6 +19,6 @@ ____________
 ____________
 ____________
 ____________
-____________
-_____G___R__
-mmmmmmmmmmmm
+___G___R____
+__ammmmms___
+ammmmmmmmmms
