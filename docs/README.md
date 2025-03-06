@@ -8,7 +8,7 @@
  - [File formats](#file-formats)
    - [Map](#map)
    - [Grid](#grid)
-   - Atlas
+   - [Atlas](#atlas)
  - Using the Dart package
 
 ## CLI
@@ -122,3 +122,38 @@ Where, the lines, in the order that they appear are:
  - Size of the grid, in the example above it has two maps wide per one tall
  - The grid size of each individual map in the grid (the maps of a grid should have the same values as seem here)
  - All the remaining lines defines which map is in each cell, where the value before the `:` is the coordinate in the grid and the value after is the path to the `typled` file for that cell.
+
+It should have the `.typled_grid` extension for the previewer app to work correctly.
+
+### Atlas
+
+Typled provides a out of the box texture atlas format, which allows users to select textures in spritesheet.
+
+It is a rather simple texture atlas format, for more advanced texture atlas features, check out [Fire Atlas](https://docs.flame-engine.org/latest/bridge_packages/flame_fire_atlas/fire_atlas.html) instead, which typled also support
+
+It should have the `.typled_atlas` extension for the previewer app to work correctly.
+
+The format is as follows:
+
+```
+[atlas]
+imagePath = mini-dungeon.png
+tileSize = 8
+
+[sprites]
+top_left_dirt = 0, 0
+top_middle_dirt = 1, 0
+top_right_dirt = 2, 0
+
+green_globin = 0, 4
+red_globin = 1, 4
+```
+
+Where:
+
+ - `[atlas]` contains all the metadata of the atlas, like the path of the image and the tile size.
+ - `[sprites]` should define all the selections, where the key is the name of the sprite, and the value is defined by four numbers:
+   -  `x`: The horizontal index, in tiles where the sprite starts
+   -  `y`: The vertical index, in tiles where the sprite starts
+   -  `w`: (Optional) How many tiles wide the sprite is
+   -  `y`: (Optional) How many tiles tall the sprite is 
