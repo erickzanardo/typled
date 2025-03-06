@@ -39,3 +39,19 @@ const rawContent = '''
 
 final grid = TypledGrid.parse(rawContent);
 ```
+
+An atlas file would look like this:
+
+```dart
+const rawContent = '''
+[atlas]
+imagePath = assets/atlas.png
+tileSize = 16
+
+[sprites]
+player = 0,0
+sprite2 = 0,0,1
+sprite3 = 0,0,1,2
+''';
+
+final atlas = TypledAtlas.parse(rawContent);
