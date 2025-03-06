@@ -9,7 +9,7 @@
    - [Map](#map)
    - [Grid](#grid)
    - [Atlas](#atlas)
- - Using the Dart package
+ - [Using the Dart package](#using-the-dart-package)
 
 ## CLI
 
@@ -156,4 +156,8 @@ Where:
    -  `x`: The horizontal index, in tiles where the sprite starts
    -  `y`: The vertical index, in tiles where the sprite starts
    -  `w`: (Optional) How many tiles wide the sprite is
-   -  `y`: (Optional) How many tiles tall the sprite is 
+   -  `y`: (Optional) How many tiles tall the sprite is
+  
+## Using the Dart package
+
+A Dart package which can read and parse Typled files is available on pub dev, for more information, check it out: https://pub.dev/packages/typled
