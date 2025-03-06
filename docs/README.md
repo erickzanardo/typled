@@ -5,8 +5,8 @@
  - [CLI](#CLI)
    - [Install](#install)
    - [Usage](#usage)
- - File formats
-   - Map
+ - [File formats](#file-formats)
+   - [Map](#map)
    - Grid
    - Atlas
  - Using the Dart package
@@ -46,3 +46,63 @@ Available commands:
   status    Print the status of the Typled Editor
   upgrade   Upgrade a the Typled Editor
 ```
+
+## File Formats
+
+Typled is built from different types of files, that represents different things. This section covers all the existing type of files and their format.
+
+### Map
+
+Represents an individual map, it is composed mainly by three sections, one for the metadata, one for the palette of textures and the layers.
+
+It should have the `.typled` extension for the previewer app to work correctly.
+
+Example:
+
+```
+[map]
+name = Test map
+width = 12 
+height = 8 
+atlas = mini-dungeon.typled_atlas
+
+[palette]
+_ = EMPTY
+
+a = top_left_dirt
+m = top_middle_dirt
+s = top_right_dirt
+G = green_globin
+R = red_globin
+
+[layer]
+____________
+____________
+____________
+____________
+____________
+___G___R____
+__ammmmms___
+ammmmmmmmmms
+```
+
+Where
+`[map]` contains the metadata of the map, with the following possible attributes
+ - `name` Any string defining a name, for information only
+ - `width` and `height` is how many cells wide and tall the grid of the map is
+ - `atlas` should be a file path that points to the atlas location
+ - `backgroundColor` and optional field with the hex color of the background of the map
+
+`[palette]`
+
+This represents a mapping where the value before the `=` is the character to be used in the map definition, and the value after is the sprite id on the `atlas` file.
+
+> [!NOTE]  
+> Although not required the `_ = EMPTY` is a convention on typled to represent an empty space in the map
+> When the previwer finds an `EMTPY` texture, it will not render anything on that cell.
+
+`[layer]`
+
+A layer should be a text where the line length is equal to the `width` of the file and `height` equal to the number of lines.
+
+A map can have multiple layers and they will be rendered on top of each other on the order that they appear on the file.
