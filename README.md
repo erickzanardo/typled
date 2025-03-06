@@ -11,7 +11,7 @@ they like.
 A simple CLI is also provided, which allow users to install and use the previewer app, which
 shows the rendered map in a simple desktop application.
 
-![](./docs/typled.gif)
+![](./docs/media/typled.gif)
 
 To install the CLI, run:
 
