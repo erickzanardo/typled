@@ -10,18 +10,17 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     List<FileEntry> initialFiles = const [],
     FileEntry? initialCurrentFile,
   }) : super(
-          WorkspaceState(
-            files: initialFiles,
-            currentFile: initialCurrentFile,
-          ),
-        );
+         WorkspaceState(files: initialFiles, currentFile: initialCurrentFile),
+       );
 
   void openFile(FileEntry entry) {
-    emit(state.copyWith(
-      files:
-          state.files.contains(entry) ? state.files : [...state.files, entry],
-      currentFile: () => entry,
-    ));
+    emit(
+      state.copyWith(
+        files:
+            state.files.contains(entry) ? state.files : [...state.files, entry],
+        currentFile: () => entry,
+      ),
+    );
   }
 
   void handleTabCommand(List<String> args) {
@@ -53,9 +52,10 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     emit(
       state.copyWith(
         currentFile: () => state.files[nextIndex],
-        files: state.files
-            .where((element) => element != state.currentFile)
-            .toList(),
+        files:
+            state.files
+                .where((element) => element != state.currentFile)
+                .toList(),
       ),
     );
   }

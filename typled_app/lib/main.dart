@@ -39,10 +39,7 @@ void main(List<String> args) {
   runApp(
     MaterialApp(
       theme: theme,
-      home: WorkspaceView(
-        initialFiles: [entry],
-        initialCurrentFile: entry,
-      ),
+      home: WorkspaceView(initialFiles: [entry], initialCurrentFile: entry),
     ),
   );
 }

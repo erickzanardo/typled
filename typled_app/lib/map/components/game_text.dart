@@ -12,13 +12,10 @@ class GameText extends TextComponent with HasPaint {
     super.anchor,
     super.children,
   }) : super(
-          textRenderer: TextPaint(
-            style: GoogleFonts.pressStart2p(
-              fontSize: fontSize,
-              color: color,
-            ),
-          ),
-        ) {
+         textRenderer: TextPaint(
+           style: GoogleFonts.pressStart2p(fontSize: fontSize, color: color),
+         ),
+       ) {
     paint = Paint()..color = color;
     _lastColor = color;
   }
@@ -32,10 +29,7 @@ class GameText extends TextComponent with HasPaint {
 
     if (_lastColor != paint.color) {
       textRenderer = TextPaint(
-        style: GoogleFonts.pressStart2p(
-          fontSize: fontSize,
-          color: paint.color,
-        ),
+        style: GoogleFonts.pressStart2p(fontSize: fontSize, color: paint.color),
       );
       _lastColor = paint.color;
     }
@@ -44,9 +38,6 @@ class GameText extends TextComponent with HasPaint {
   Vector2 get textSize {
     final metrics = textRenderer.getLineMetrics(text);
 
-    return Vector2(
-      metrics.width,
-      metrics.height,
-    );
+    return Vector2(metrics.width, metrics.height);
   }
 }

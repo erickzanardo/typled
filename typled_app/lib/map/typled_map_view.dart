@@ -73,12 +73,7 @@ class _TypledMapViewState extends State<TypledMapView> {
               Expanded(
                 child: Row(
                   children: [
-                    Expanded(
-                      child: GameWidget(
-                        game: _game,
-                        autofocus: false,
-                      ),
-                    ),
+                    Expanded(child: GameWidget(game: _game, autofocus: false)),
                     if (state.showPalette && _game.loadedTypled != null)
                       SizedBox(
                         width: 240,
@@ -99,14 +94,15 @@ class _TypledMapViewState extends State<TypledMapView> {
                                       child: Stack(
                                         children: [
                                           Positioned.fill(
-                                            child: item.value == 'EMPTY'
-                                                ? const Text('EMPTY')
-                                                : SpriteWidget(
-                                                    sprite: _game.loadedAtlas!
-                                                        .getSprite(
-                                                      item.value,
+                                            child:
+                                                item.value == 'EMPTY'
+                                                    ? const Text('EMPTY')
+                                                    : SpriteWidget(
+                                                      sprite: _game.loadedAtlas!
+                                                          .getSprite(
+                                                            item.value,
+                                                          ),
                                                     ),
-                                                  ),
                                           ),
                                           Text(item.key),
                                         ],

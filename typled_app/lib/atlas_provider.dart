@@ -17,10 +17,9 @@ abstract class AtlasProvider {
     if (file.path.endsWith('typled_atlas')) {
       final atlasContent = await file.readAsString();
       final atlas = TypledAtlas.parse(atlasContent);
-      final image = await Images(prefix: '').load(path.join(
-        basePath,
-        atlas.imagePath,
-      ));
+      final image = await Images(
+        prefix: '',
+      ).load(path.join(basePath, atlas.imagePath));
       return TypledAtlasProvider(image, atlas);
     } else {
       final atlasBytes = await file.readAsBytes();
@@ -78,16 +77,9 @@ class TypledAtlasProvider extends AtlasProvider {
       selection.$2.toDouble() * atlas.tileSize,
     );
 
-    final srcSize = Vector2(
-      w.toDouble(),
-      h.toDouble(),
-    );
+    final srcSize = Vector2(w.toDouble(), h.toDouble());
 
-    return Sprite(
-      image,
-      srcPosition: srcPosition,
-      srcSize: srcSize,
-    );
+    return Sprite(image, srcPosition: srcPosition, srcSize: srcSize);
   }
 
   @override

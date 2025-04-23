@@ -22,11 +22,11 @@ abstract class MapCommand extends Command<(MapCubit, TypledGame)> {
 
 class ZoomCommand extends MapCommand {
   const ZoomCommand()
-      : super(
-          command: 'zoom',
-          description: 'Zooms the camera to the specified level.',
-          usage: 'zoom <level>',
-        );
+    : super(
+        command: 'zoom',
+        description: 'Zooms the camera to the specified level.',
+        usage: 'zoom <level>',
+      );
 
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
@@ -45,11 +45,11 @@ class ZoomCommand extends MapCommand {
 
 class ResetCameraCommand extends MapCommand {
   const ResetCameraCommand()
-      : super(
-          command: 'reset_camera',
-          description: 'Resets the camera to the default position.',
-          usage: 'reset_camera',
-        );
+    : super(
+        command: 'reset_camera',
+        description: 'Resets the camera to the default position.',
+        usage: 'reset_camera',
+      );
 
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
@@ -60,11 +60,11 @@ class ResetCameraCommand extends MapCommand {
 
 class PanCameraCommand extends MapCommand {
   const PanCameraCommand()
-      : super(
-          command: 'pan',
-          description: 'Pans the camera with the specified values.',
-          usage: 'pan <x> <y>',
-        );
+    : super(
+        command: 'pan',
+        description: 'Pans the camera with the specified values.',
+        usage: 'pan <x> <y>',
+      );
 
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
@@ -88,11 +88,11 @@ class PanCameraCommand extends MapCommand {
 
 class MoveCommand extends MapCommand {
   const MoveCommand()
-      : super(
-          command: 'move',
-          description: 'Moves the camera to the specified position.',
-          usage: 'move <x> <y>',
-        );
+    : super(
+        command: 'move',
+        description: 'Moves the camera to the specified position.',
+        usage: 'move <x> <y>',
+      );
 
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
@@ -116,11 +116,11 @@ class MoveCommand extends MapCommand {
 
 class PaletteCommand extends MapCommand {
   const PaletteCommand()
-      : super(
-          command: 'palette',
-          description: 'Toggles the palette.',
-          usage: 'palette',
-        );
+    : super(
+        command: 'palette',
+        description: 'Toggles the palette.',
+        usage: 'palette',
+      );
 
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
@@ -130,11 +130,11 @@ class PaletteCommand extends MapCommand {
 
 class TileGridCommand extends MapCommand {
   const TileGridCommand()
-      : super(
-          command: 'grid',
-          description: 'Toggles the tile grid.',
-          usage: 'grid',
-        );
+    : super(
+        command: 'grid',
+        description: 'Toggles the tile grid.',
+        usage: 'grid',
+      );
 
   @override
   void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {

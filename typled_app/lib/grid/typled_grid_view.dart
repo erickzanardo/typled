@@ -12,11 +12,7 @@ import 'package:typled_editor/widgets/help_dialog.dart';
 import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 
 class TypledGridView extends StatefulWidget {
-  const TypledGridView({
-    super.key,
-    required this.basePath,
-    required this.file,
-  });
+  const TypledGridView({super.key, required this.basePath, required this.file});
 
   final String basePath;
   final String file;
@@ -45,39 +41,38 @@ class _TypledGridState extends State<TypledGridView> {
           return Column(
             children: [
               Expanded(
-                child: LayoutBuilder(builder: (context, constraints) {
-                  final totalWidth = grid.gridWidth * grid.cellWidth;
-                  final totalHeight = grid.gridHeight * grid.cellHeight;
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final totalWidth = grid.gridWidth * grid.cellWidth;
+                    final totalHeight = grid.gridHeight * grid.cellHeight;
 
-                  final scale = math.min(
-                    constraints.maxWidth / totalWidth,
-                    constraints.maxHeight / totalHeight,
-                  );
+                    final scale = math.min(
+                      constraints.maxWidth / totalWidth,
+                      constraints.maxHeight / totalHeight,
+                    );
 
-                  return Stack(
-                    children: [
-                      for (final cell in grid.cells.entries)
-                        _MapView(
-                          basePath: widget.basePath,
-                          file: widget.file,
-                          cell: cell,
-                          scale: scale,
-                          grid: grid,
-                        ),
-                    ],
-                  );
-                }),
+                    return Stack(
+                      children: [
+                        for (final cell in grid.cells.entries)
+                          _MapView(
+                            basePath: widget.basePath,
+                            file: widget.file,
+                            cell: cell,
+                            scale: scale,
+                            grid: grid,
+                          ),
+                      ],
+                    );
+                  },
+                ),
               ),
               CommandPrompt(
                 commands: GridCommand.commands,
                 onSubmitCommand: (command, args) {
-                  command.execute(
-                    (
-                      context.read<GridCubit>(),
-                      context.read<WorkspaceCubit>(),
-                    ),
-                    args,
-                  );
+                  command.execute((
+                    context.read<GridCubit>(),
+                    context.read<WorkspaceCubit>(),
+                  ), args);
                 },
                 onShowHelp: (context) {
                   HelpDialog.show(context, commands: GridCommand.commands);
@@ -128,9 +123,7 @@ class _MapView extends StatelessWidget {
               cell.key.$1 * grid.cellWidth,
               cell.key.$2 * grid.cellHeight,
             ),
-            parentGridEnabled: cubit.stream.map(
-              (state) => state.gridEnabled,
-            ),
+            parentGridEnabled: cubit.stream.map((state) => state.gridEnabled),
           ),
           if (state.gridEnabled) ...[
             Positioned(
@@ -140,9 +133,7 @@ class _MapView extends StatelessWidget {
               height: grid.cellHeight.toDouble() * scale,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                  ),
+                  border: Border.all(color: Colors.white),
                 ),
               ),
             ),
@@ -151,10 +142,7 @@ class _MapView extends StatelessWidget {
               left: 4,
               child: Text(
                 '${cell.key.$1}, ${cell.key.$2}: ${cell.value}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 8,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
             ),
           ],

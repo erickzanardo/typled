@@ -17,11 +17,11 @@ abstract class GridCommand extends Command<(GridCubit, WorkspaceCubit)> {
 
 class TileGridCommand extends GridCommand {
   const TileGridCommand()
-      : super(
-          command: 'grid',
-          description: 'Toggles the tile grid.',
-          usage: 'grid',
-        );
+    : super(
+        command: 'grid',
+        description: 'Toggles the tile grid.',
+        usage: 'grid',
+      );
 
   @override
   void execute((GridCubit, WorkspaceCubit) subject, List<String> args) {
@@ -31,11 +31,11 @@ class TileGridCommand extends GridCommand {
 
 class OpenMapCommand extends GridCommand {
   const OpenMapCommand()
-      : super(
-          command: 'open',
-          description: 'Opens the map.',
-          usage: 'open cellX cellY',
-        );
+    : super(
+        command: 'open',
+        description: 'Opens the map.',
+        usage: 'open cellX cellY',
+      );
 
   @override
   void execute((GridCubit, WorkspaceCubit) subject, List<String> args) {
