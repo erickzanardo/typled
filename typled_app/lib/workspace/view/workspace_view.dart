@@ -78,7 +78,8 @@ class WorkspaceViewContent extends StatelessWidget {
                                 basePath: basePath,
                                 file: file,
                               );
-                            } else if (path.extension(file) == '.typled_atlas') {
+                            } else if (path.extension(file) ==
+                                '.typled_atlas') {
                               return AtlasView(
                                 basePath: basePath,
                                 file: file,
