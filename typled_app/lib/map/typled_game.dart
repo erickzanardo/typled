@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:nes_ui/nes_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:typled/typled.dart';
+import 'package:typled_editor/atlas_provider.dart';
 import 'package:typled_editor/extensions/color.dart';
-import 'package:typled_editor/map/atlas_provider.dart';
 import 'package:typled_editor/map/components/components.dart';
 
 class TypledGame extends FlameGame {

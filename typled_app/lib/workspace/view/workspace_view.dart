@@ -2,6 +2,7 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nes_ui/nes_ui.dart';
+import 'package:typled_editor/atlas/atlas.dart';
 import 'package:typled_editor/grid/typled_grid_view.dart';
 import 'package:typled_editor/map/typled_map_view.dart';
 import '../cubit/workspace_cubit.dart';
@@ -74,6 +75,11 @@ class WorkspaceViewContent extends StatelessWidget {
                               );
                             } else if (path.extension(file) == '.typled_grid') {
                               return TypledGridView(
+                                basePath: basePath,
+                                file: file,
+                              );
+                            } else if (path.extension(file) == '.typled_atlas') {
+                              return AtlasView(
                                 basePath: basePath,
                                 file: file,
                               );
