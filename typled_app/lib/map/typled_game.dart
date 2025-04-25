@@ -13,11 +13,11 @@ import 'package:typled_editor/extensions/color.dart';
 import 'package:typled_editor/map/components/components.dart';
 
 class TypledGame extends FlameGame {
-  TypledGame(
-      {required String basePath,
-      required String filePath,
-      (int, int)? relativeGridPosition})
-      : _basePath = basePath,
+  TypledGame({
+    required String basePath,
+    required String filePath,
+    (int, int)? relativeGridPosition,
+  })  : _basePath = basePath,
         _filePath = filePath,
         _relativeGridPosition = relativeGridPosition;
 
@@ -84,8 +84,10 @@ class TypledGame extends FlameGame {
 
       final atlasPath = path.join(_basePath, currentTypled.atlas);
       final atlasFile = File(atlasPath);
-      final currentAtlas =
-          await AtlasProvider.load(file: atlasFile, basePath: _basePath);
+      final currentAtlas = await AtlasProvider.load(
+        file: atlasFile,
+        basePath: _basePath,
+      );
 
       if (currentTypled.backgroundColor != null) {
         try {
@@ -188,10 +190,7 @@ class TypledGame extends FlameGame {
 
     for (final error in errors) {
       NesScaffoldMessenger.of(buildContext!).showSnackBar(
-        NesSnackbar(
-          type: NesSnackbarType.error,
-          text: error,
-        ),
+        NesSnackbar(type: NesSnackbarType.error, text: error),
         alignment: Alignment.topRight,
       );
     }

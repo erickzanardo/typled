@@ -51,8 +51,9 @@ class WorkspaceViewContent extends StatelessWidget {
                                     ? Colors.blue.shade900
                                     : Colors.blue,
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   child: Text(entry.basename),
                                 ),
                               ),

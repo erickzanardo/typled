@@ -1,10 +1,7 @@
 part of 'workspace_cubit.dart';
 
 class FileEntry extends Equatable {
-  const FileEntry({
-    required this.file,
-    required this.basePath,
-  });
+  const FileEntry({required this.file, required this.basePath});
 
   final String file;
   final String basePath;
@@ -16,10 +13,7 @@ class FileEntry extends Equatable {
 }
 
 class WorkspaceState extends Equatable {
-  const WorkspaceState({
-    this.files = const [],
-    this.currentFile,
-  });
+  const WorkspaceState({this.files = const [], this.currentFile});
 
   final List<FileEntry> files;
   final FileEntry? currentFile;

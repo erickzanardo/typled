@@ -1,6 +1,12 @@
 import 'dart:io';
 
-enum _ReadingState { none, map, palette, layers }
+enum _ReadingState {
+  none,
+  map,
+  palette,
+  layers,
+  metadata,
+}
 
 class Typled {
   Typled({
@@ -10,6 +16,7 @@ class Typled {
     required this.atlas,
     required this.palette,
     required this.layers,
+    this.metadata = const {},
     this.backgroundColor,
   });
 
@@ -18,6 +25,7 @@ class Typled {
   final int height;
   final String atlas;
   final Map<String, String> palette;
+  final Map<String, String> metadata;
   final List<List<List<String>>> layers;
   final String? backgroundColor;
 
@@ -32,6 +40,7 @@ class Typled {
     late final int width;
     late final int height;
     late final String atlas;
+    final metadata = <String, String>{};
     final palette = <String, String>{};
     final layers = <List<List<String>>>[];
     String? backgroundColor;
@@ -53,6 +62,8 @@ class Typled {
         case _ReadingState.map:
           if (trimmedLine == '[palette]') {
             state = _ReadingState.palette;
+          } else if (trimmedLine == '[metadata]') {
+            state = _ReadingState.metadata;
           } else if (line.startsWith('name')) {
             name = line.split('=')[1].trim();
           } else if (line.startsWith('width')) {
@@ -96,6 +107,28 @@ class Typled {
             final layer = layers.last;
             layer.add(line.split(''));
           }
+        case _ReadingState.metadata:
+          if (trimmedLine == '[palette]') {
+            state = _ReadingState.palette;
+          } else if (trimmedLine.isNotEmpty) {
+            final parts = line.split('=');
+            if (parts.length != 2) {
+              throwError(line, 'key=value');
+            }
+            final key = parts[0].trim();
+            final value = parts[1].trim();
+            if (key.isEmpty || value.isEmpty) {
+              throwError(line, 'key=value');
+            }
+            if (metadata.containsKey(key)) {
+              throw Exception(
+                'Duplicated key $key with values ($value, ${metadata[key]})',
+              );
+            }
+            metadata[key] = value;
+          } else {
+            throwError(line, '[map]|key=value');
+          }
       }
     }
 
@@ -106,6 +139,7 @@ class Typled {
       atlas: atlas,
       palette: palette,
       layers: layers,
+      metadata: metadata,
       backgroundColor: backgroundColor,
     );
   }

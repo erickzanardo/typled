@@ -73,12 +73,7 @@ class _TypledMapViewState extends State<TypledMapView> {
               Expanded(
                 child: Row(
                   children: [
-                    Expanded(
-                      child: GameWidget(
-                        game: _game,
-                        autofocus: false,
-                      ),
-                    ),
+                    Expanded(child: GameWidget(game: _game, autofocus: false)),
                     if (state.showPalette && _game.loadedTypled != null)
                       SizedBox(
                         width: 240,

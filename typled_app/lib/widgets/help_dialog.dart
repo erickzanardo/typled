@@ -3,10 +3,7 @@ import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/prompt/prompt_command.dart';
 
 class HelpDialog extends StatelessWidget {
-  const HelpDialog({
-    required this.commands,
-    super.key,
-  });
+  const HelpDialog({required this.commands, super.key});
 
   final List<Command> commands;
 
@@ -16,9 +13,7 @@ class HelpDialog extends StatelessWidget {
   }) async {
     await NesDialog.show(
       context: context,
-      builder: (context) => HelpDialog(
-        commands: commands,
-      ),
+      builder: (context) => HelpDialog(commands: commands),
     );
   }
 
@@ -36,10 +31,7 @@ class HelpDialog extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'q',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                  Text('q', style: Theme.of(context).textTheme.bodyLarge),
                   Text(
                     'Quit the editor',
                     style: Theme.of(context).textTheme.bodySmall,
@@ -57,10 +49,7 @@ class HelpDialog extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    't',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                  Text('t', style: Theme.of(context).textTheme.bodyLarge),
                   Text(
                     'Change the current open tab',
                     style: Theme.of(context).textTheme.bodySmall,

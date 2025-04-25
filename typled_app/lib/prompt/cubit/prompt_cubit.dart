@@ -5,29 +5,23 @@ import 'package:typled_editor/prompt/prompt_command.dart';
 
 part 'prompt_state.dart';
 
-enum SubmitCommandResult {
-  handled,
-  help,
-  quit,
-  tab,
-  notFound,
-}
+enum SubmitCommandResult { handled, help, quit, tab, notFound }
 
 class PromptCubit<T> extends Cubit<PromptState> {
-  PromptCubit({
-    required this.commands,
-    required this.onSubmitCommand,
-  }) : super(const PromptState());
+  PromptCubit({required this.commands, required this.onSubmitCommand})
+      : super(const PromptState());
 
   final List<Command<T>> commands;
   final void Function(Command<T>, List<String>) onSubmitCommand;
 
   void searchHistoryUp() {
     if (state.commandHistoryIndex > 0) {
-      emit(state.copyWith(
-        commandHistoryIndex: state.commandHistoryIndex - 1,
-        command: state.commandHistory[state.commandHistoryIndex - 1],
-      ));
+      emit(
+        state.copyWith(
+          commandHistoryIndex: state.commandHistoryIndex - 1,
+          command: state.commandHistory[state.commandHistoryIndex - 1],
+        ),
+      );
     }
   }
 
@@ -35,10 +29,11 @@ class PromptCubit<T> extends Cubit<PromptState> {
     if (state.command.isNotEmpty) {
       emit(
         state.copyWith(
-            command: state.command.substring(
-          0,
-          math.max(0, state.command.length - 1),
-        )),
+          command: state.command.substring(
+            0,
+            math.max(0, state.command.length - 1),
+          ),
+        ),
       );
     }
   }
@@ -57,10 +52,12 @@ class PromptCubit<T> extends Cubit<PromptState> {
 
   void searchHistoryDown() {
     if (state.commandHistoryIndex < state.commandHistory.length - 1) {
-      emit(state.copyWith(
-        commandHistoryIndex: state.commandHistoryIndex + 1,
-        command: state.commandHistory[state.commandHistoryIndex + 1],
-      ));
+      emit(
+        state.copyWith(
+          commandHistoryIndex: state.commandHistoryIndex + 1,
+          command: state.commandHistory[state.commandHistoryIndex + 1],
+        ),
+      );
     }
   }
 
@@ -73,11 +70,13 @@ class PromptCubit<T> extends Cubit<PromptState> {
   }
 
   void resetCommand() {
-    emit(state.copyWith(
-      commandMode: false,
-      commandHistoryIndex: state.commandHistory.length,
-      command: '',
-    ));
+    emit(
+      state.copyWith(
+        commandMode: false,
+        commandHistoryIndex: state.commandHistory.length,
+        command: '',
+      ),
+    );
   }
 
   List<String> get args => state.command.split(' ').sublist(1);
@@ -112,11 +111,13 @@ class PromptCubit<T> extends Cubit<PromptState> {
       } else {
         return SubmitCommandResult.notFound;
       }
-      emit(state.copyWith(
-        commandMode: false,
-        commandHistoryIndex: state.commandHistory.length,
-        command: '',
-      ));
+      emit(
+        state.copyWith(
+          commandMode: false,
+          commandHistoryIndex: state.commandHistory.length,
+          command: '',
+        ),
+      );
       return SubmitCommandResult.handled;
     }
     return SubmitCommandResult.notFound;

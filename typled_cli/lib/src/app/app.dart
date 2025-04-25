@@ -82,8 +82,9 @@ Future<void> ensureAppIsDownloaded() async {
         platform: Platform.isMacOS ? macosArtifactName : linuxArtifactName,
       );
 
-      final appFile =
-          File(path.join(Directory.systemTemp.path, macosBinDownloadName));
+      final appFile = File(
+        path.join(Directory.systemTemp.path, macosBinDownloadName),
+      );
       appFile.writeAsBytesSync(appBytes);
 
       progress.complete('Typled downloaded');
@@ -137,18 +138,15 @@ void openFile(String filePath) {
   late final ProcessResult process;
 
   if (Platform.isMacOS) {
-    process = Process.runSync(
-      'open',
-      ['-n', appPath, '--args', Directory.current.path, filePath],
-    );
-  } else if (Platform.isLinux) {
-    process = Process.runSync(
+    process = Process.runSync('open', [
+      '-n',
       appPath,
-      [
-        Directory.current.path,
-        filePath,
-      ],
-    );
+      '--args',
+      Directory.current.path,
+      filePath,
+    ]);
+  } else if (Platform.isLinux) {
+    process = Process.runSync(appPath, [Directory.current.path, filePath]);
   }
 
   if (process.exitCode != 0) {
