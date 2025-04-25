@@ -17,9 +17,9 @@ class TypledGame extends FlameGame {
     required String basePath,
     required String filePath,
     (int, int)? relativeGridPosition,
-  }) : _basePath = basePath,
-       _filePath = filePath,
-       _relativeGridPosition = relativeGridPosition;
+  })  : _basePath = basePath,
+        _filePath = filePath,
+        _relativeGridPosition = relativeGridPosition;
 
   final String _basePath;
   final String _filePath;
@@ -162,11 +162,10 @@ class TypledGame extends FlameGame {
                   x.toDouble() * currentAtlas.tileWidth,
                   y.toDouble() * currentAtlas.tileHeight,
                 ),
-                paint:
-                    Paint()
-                      ..color = color
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 0,
+                paint: Paint()
+                  ..color = color
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 0,
                 children: [
                   GameText(
                     position: Vector2.all(2),

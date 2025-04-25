@@ -37,9 +37,9 @@ class PromptState extends Equatable {
 
   @override
   List<Object?> get props => [
-    command,
-    commandMode,
-    commandHistory,
-    commandHistoryIndex,
-  ];
+        command,
+        commandMode,
+        commandHistory,
+        commandHistoryIndex,
+      ];
 }

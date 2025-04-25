@@ -9,7 +9,7 @@ enum SubmitCommandResult { handled, help, quit, tab, notFound }
 
 class PromptCubit<T> extends Cubit<PromptState> {
   PromptCubit({required this.commands, required this.onSubmitCommand})
-    : super(const PromptState());
+      : super(const PromptState());
 
   final List<Command<T>> commands;
   final void Function(Command<T>, List<String>) onSubmitCommand;

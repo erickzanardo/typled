@@ -12,10 +12,10 @@ class GameText extends TextComponent with HasPaint {
     super.anchor,
     super.children,
   }) : super(
-         textRenderer: TextPaint(
-           style: GoogleFonts.pressStart2p(fontSize: fontSize, color: color),
-         ),
-       ) {
+          textRenderer: TextPaint(
+            style: GoogleFonts.pressStart2p(fontSize: fontSize, color: color),
+          ),
+        ) {
     paint = Paint()..color = color;
     _lastColor = color;
   }

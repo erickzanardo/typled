@@ -94,15 +94,14 @@ class _TypledMapViewState extends State<TypledMapView> {
                                       child: Stack(
                                         children: [
                                           Positioned.fill(
-                                            child:
-                                                item.value == 'EMPTY'
-                                                    ? const Text('EMPTY')
-                                                    : SpriteWidget(
-                                                      sprite: _game.loadedAtlas!
-                                                          .getSprite(
-                                                            item.value,
-                                                          ),
+                                            child: item.value == 'EMPTY'
+                                                ? const Text('EMPTY')
+                                                : SpriteWidget(
+                                                    sprite: _game.loadedAtlas!
+                                                        .getSprite(
+                                                      item.value,
                                                     ),
+                                                  ),
                                           ),
                                           Text(item.key),
                                         ],

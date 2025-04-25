@@ -10,8 +10,8 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     List<FileEntry> initialFiles = const [],
     FileEntry? initialCurrentFile,
   }) : super(
-         WorkspaceState(files: initialFiles, currentFile: initialCurrentFile),
-       );
+          WorkspaceState(files: initialFiles, currentFile: initialCurrentFile),
+        );
 
   void openFile(FileEntry entry) {
     emit(
@@ -52,10 +52,9 @@ class WorkspaceCubit extends Cubit<WorkspaceState> {
     emit(
       state.copyWith(
         currentFile: () => state.files[nextIndex],
-        files:
-            state.files
-                .where((element) => element != state.currentFile)
-                .toList(),
+        files: state.files
+            .where((element) => element != state.currentFile)
+            .toList(),
       ),
     );
   }

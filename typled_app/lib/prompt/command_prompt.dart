@@ -23,9 +23,8 @@ class CommandPrompt<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PromptCubit<T>>(
-      create:
-          (context) =>
-              PromptCubit(commands: commands, onSubmitCommand: onSubmitCommand),
+      create: (context) =>
+          PromptCubit(commands: commands, onSubmitCommand: onSubmitCommand),
       child: Builder(
         builder: (context) {
           return Focus(
@@ -54,8 +53,8 @@ class CommandPrompt<T> extends StatelessWidget {
                     } else if (result == SubmitCommandResult.tab) {
                       final cubit = context.read<PromptCubit<T>>();
                       context.read<WorkspaceCubit>().handleTabCommand(
-                        cubit.args,
-                      );
+                            cubit.args,
+                          );
                       cubit.clearCommand();
                     }
                   } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
@@ -68,8 +67,8 @@ class CommandPrompt<T> extends StatelessWidget {
                     // ignore
                   } else {
                     context.read<PromptCubit<T>>().typeCommand(
-                      event.character ?? '',
-                    );
+                          event.character ?? '',
+                        );
                   }
                 } else if (event.logicalKey == LogicalKeyboardKey.colon &&
                     !state.commandMode) {
@@ -82,35 +81,35 @@ class CommandPrompt<T> extends StatelessWidget {
               builder: (context, state) {
                 return state.commandMode
                     ? ColoredBox(
-                      color: Colors.blue[900]!,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            ':${state.command}',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    )
-                    : Row(
-                      children: [
-                        Expanded(
-                          child: ColoredBox(
-                            color: Colors.blue,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                basePath,
-                                style: const TextStyle(fontSize: 12),
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                        color: Colors.blue[900]!,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              ':${state.command}',
+                              style: const TextStyle(fontSize: 12),
                             ),
                           ),
                         ),
-                      ],
-                    );
+                      )
+                    : Row(
+                        children: [
+                          Expanded(
+                            child: ColoredBox(
+                              color: Colors.blue,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  basePath,
+                                  style: const TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
               },
             ),
           );
