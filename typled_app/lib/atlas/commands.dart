@@ -9,5 +9,29 @@ abstract class AtlasCommand extends Command<(AtlasCubit, WorkspaceCubit)> {
     required super.usage,
   });
 
-  static List<AtlasCommand> commands = [];
+  static List<AtlasCommand> commands = [
+    const SelectSpriteCommand(),
+  ];
+}
+
+class SelectSpriteCommand extends AtlasCommand {
+  const SelectSpriteCommand()
+      : super(
+          command: 'select',
+          description: 'Select a sprite',
+          usage: 'select <spriteId>',
+        );
+
+  @override
+  execute((AtlasCubit, WorkspaceCubit) context, List<String> args) {
+    final cubit = context.$1;
+
+    final spriteId = args.first.trim();
+    if (spriteId.isEmpty) {
+      cubit.clearSelectedSpriteId();
+      return;
+    }
+
+    cubit.setSelectedSpriteId(spriteId);
+  }
 }

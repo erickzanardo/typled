@@ -37,7 +37,12 @@ class _AtlasViewState extends State<AtlasView> {
         Expanded(
             child: Row(
           children: [
-            Expanded(child: GameWidget(game: _game)),
+            Expanded(
+              child: GameWidget(
+                autofocus: false,
+                game: _game,
+              ),
+            ),
             SizedBox(
               width: 350,
               child: FutureBuilder(
@@ -97,7 +102,7 @@ class _AtlasViewState extends State<AtlasView> {
           onSubmitCommand: (command, args) {
             command.execute(
               (
-                context.read<AtlasCubit>(),
+                _game.cubit,
                 context.read<WorkspaceCubit>(),
               ),
               args,
