@@ -53,8 +53,10 @@ class _AtlasViewState extends State<AtlasView> {
                           child: Column(
                             spacing: 16,
                             children: [
-                            Text('Sprites', style: Theme.of(context).textTheme.titleLarge),
-                            const Divider(),
+                              Text('Sprites',
+                                  style:
+                                      Theme.of(context).textTheme.titleLarge),
+                              const Divider(),
                               for (final spriteId in state.sprites)
                                 NesPressable(
                                   onPress: () {
@@ -65,7 +67,8 @@ class _AtlasViewState extends State<AtlasView> {
                                     }
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
                                     child: Row(
                                       spacing: 16,
                                       children: [

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flame_bloc/flame_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -21,6 +23,8 @@ class AtlasGame extends FlameGame {
   late TypledAtlas loadedAtlas;
 
   late SpriteComponent atlasImage;
+
+  late RectangleComponent recticle;
 
   final cubit = AtlasCubit();
 
@@ -44,9 +48,44 @@ class AtlasGame extends FlameGame {
 
     camera.viewfinder.anchor = Anchor.topLeft;
 
+    add(
+      FlameBlocListener<AtlasCubit, AtlasState>(
+        bloc: cubit,
+        onNewState: (state) {
+          if (state.selectedSpriteId != '') {
+            final spriteData = loadedAtlas.sprites[state.selectedSpriteId];
+            if (spriteData != null) {
+              recticle
+                ..size = Vector2(
+                  ((spriteData.$3 ?? 1) * loadedAtlas.tileSize).toDouble(),
+                  ((spriteData.$4 ?? 1) * loadedAtlas.tileSize).toDouble(),
+                )
+                ..position = Vector2(
+                  (spriteData.$1 * loadedAtlas.tileSize).toDouble(),
+                  (spriteData.$2 * loadedAtlas.tileSize).toDouble(),
+                );
+
+              recticle.paint = Paint()
+                ..color = Colors.yellow
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 1;
+            }
+          } else {
+            recticle.paint = Paint();
+          }
+        },
+      ),
+    );
+
     world.add(
       atlasImage = SpriteComponent(
         sprite: Sprite(atlasProvider.image),
+      ),
+    );
+
+    world.add(
+      recticle = RectangleComponent(
+        priority: 10,
       ),
     );
 
