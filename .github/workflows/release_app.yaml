@@ -3,7 +3,7 @@ name: release_app
 on:
   push:
     tags:
-      - '*'
+      - '*-app'
 
 jobs:
   create_version:
