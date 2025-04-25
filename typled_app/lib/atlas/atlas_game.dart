@@ -55,21 +55,10 @@ class AtlasGame extends FlameGame {
           if (state.selectedSpriteId != '') {
             final spriteData = loadedAtlas.sprites[state.selectedSpriteId];
             if (spriteData != null) {
-              recticle
-                ..size = Vector2(
-                  ((spriteData.$3 ?? 1) * loadedAtlas.tileSize).toDouble(),
-                  ((spriteData.$4 ?? 1) * loadedAtlas.tileSize).toDouble(),
-                )
-                ..position = Vector2(
-                  (spriteData.$1 * loadedAtlas.tileSize).toDouble(),
-                  (spriteData.$2 * loadedAtlas.tileSize).toDouble(),
-                );
-
-              recticle.paint = Paint()
-                ..color = Colors.yellow
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 1;
+              setReticleFromSpriteData(spriteData);
             }
+          } else if (state.customSelection.$1 != -1) {
+            setReticleFromSpriteData(state.customSelection);
           } else {
             recticle.paint = Paint();
           }
@@ -96,5 +85,22 @@ class AtlasGame extends FlameGame {
           )
           .toList(),
     );
+  }
+
+  void setReticleFromSpriteData((int, int, int?, int?) spriteData) {
+    recticle
+      ..size = Vector2(
+        ((spriteData.$3 ?? 1) * loadedAtlas.tileSize).toDouble(),
+        ((spriteData.$4 ?? 1) * loadedAtlas.tileSize).toDouble(),
+      )
+      ..position = Vector2(
+        (spriteData.$1 * loadedAtlas.tileSize).toDouble(),
+        (spriteData.$2 * loadedAtlas.tileSize).toDouble(),
+      );
+
+    recticle.paint = Paint()
+      ..color = Colors.yellow
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
   }
 }

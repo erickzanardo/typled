@@ -17,4 +17,17 @@ class AtlasCubit extends Cubit<AtlasState> {
   void clearSelectedSpriteId() {
     emit(state.copyWith(selectedSpriteId: ''));
   }
+
+  void setCustomSelection(
+    int x,
+    int y,
+    int? width,
+    int? height,
+  ) {
+    emit(state.copyWith(customSelection: (x, y, width, height)));
+  }
+
+  void clearCustomSelection() {
+    emit(state.copyWith(customSelection: (-1, -1, null, null)));
+  }
 }
