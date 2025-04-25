@@ -125,10 +125,18 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: e6873a8540a197a9bfe251e10c9e1f200329041d6e6d70df2cf38aa681cf2ef7
+      sha256: f9e7a100c25f8d6bfd143bf325a9689c509216cd1c8133ce4684955c56770de7
       url: "https://pub.dev"
     source: hosted
-    version: "1.19.0"
+    version: "1.28.1"
+  flame_bloc:
+    dependency: "direct main"
+    description:
+      name: flame_bloc
+      sha256: "56a4dbbbe11b16ec391151f5bca72328a633abd54bd7325e0ba2fa4b687c3085"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.12.12"
   flame_fire_atlas:
     dependency: "direct main"
     description:
@@ -303,10 +311,10 @@ packages:
     dependency: transitive
     description:
       name: ordered_set
-      sha256: "984658d0c28c69516ed22f780db7511932a223339463a16c0cc48b3055e926c4"
+      sha256: dc68b8f1abc7115b81cf890bf7d2ece4ed1d95e0f3e486ab4b64ab3d16d2ea42
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.1"
+    version: "7.0.0"
   path:
     dependency: "direct main"
     description:
@@ -470,7 +478,7 @@ packages:
       path: "../typled"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   vector_math:
     dependency: transitive
     description:
@@ -521,4 +529,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.7.0-0 <4.0.0"
-  flutter: ">=3.22.0"
+  flutter: ">=3.27.1"

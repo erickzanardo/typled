@@ -18,7 +18,7 @@ void main(List<String> args) {
   final basePath = args[0];
   final file = args[1];
 
-  const knownExtensions = ['.typled', '.typled_grid'];
+  const knownExtensions = ['.typled', '.typled_grid', '.typled_atlas'];
   if (!knownExtensions.contains(path.extension(file))) {
     print('Unknown file extension: ${path.extension(file)}');
     exit(1);
