@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nes_ui/nes_ui.dart';
 import 'package:typled_editor/atlas/atlas_game.dart';
 import 'package:typled_editor/atlas/commands.dart';
 import 'package:typled_editor/atlas/cubit/atlas_cubit.dart';
@@ -31,33 +32,80 @@ class _AtlasViewState extends State<AtlasView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return AtlasCubit();
-      },
-      child: BlocBuilder<AtlasCubit, AtlasState>(builder: (context, state) {
-        return Column(
+    return Column(
+      children: [
+        Expanded(
+            child: Row(
           children: [
             Expanded(child: GameWidget(game: _game)),
-            CommandPrompt(
-              commands: AtlasCommand.commands,
-              onSubmitCommand: (command, args) {
-                command.execute(
-                  (
-                    context.read<AtlasCubit>(),
-                    context.read<WorkspaceCubit>(),
-                  ),
-                  args,
-                );
-              },
-              onShowHelp: (context) {
-                HelpDialog.show(context, commands: AtlasCommand.commands);
-              },
-              basePath: widget.basePath,
+            SizedBox(
+              width: 350,
+              child: FutureBuilder(
+                  future: _game.loaded,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const SizedBox();
+                    }
+                    return BlocBuilder<AtlasCubit, AtlasState>(
+                      bloc: _game.cubit,
+                      builder: (context, state) {
+                        return NesSingleChildScrollView(
+                          child: Column(
+                            spacing: 16,
+                            children: [
+                            Text('Sprites', style: Theme.of(context).textTheme.titleLarge),
+                            const Divider(),
+                              for (final spriteId in state.sprites)
+                                NesPressable(
+                                  onPress: () {
+                                    if (spriteId == state.selectedSpriteId) {
+                                      _game.cubit.clearSelectedSpriteId();
+                                    } else {
+                                      _game.cubit.setSelectedSpriteId(spriteId);
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Row(
+                                      spacing: 16,
+                                      children: [
+                                        const SizedBox(),
+                                        if (state.selectedSpriteId == spriteId)
+                                          NesIcon(
+                                            iconData:
+                                                NesIcons.handPointingRight,
+                                          ),
+                                        Text(spriteId),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
             ),
           ],
-        );
-      }),
+        )),
+        CommandPrompt(
+          commands: AtlasCommand.commands,
+          onSubmitCommand: (command, args) {
+            command.execute(
+              (
+                context.read<AtlasCubit>(),
+                context.read<WorkspaceCubit>(),
+              ),
+              args,
+            );
+          },
+          onShowHelp: (context) {
+            HelpDialog.show(context, commands: AtlasCommand.commands);
+          },
+          basePath: widget.basePath,
+        ),
+      ],
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:typled/typled.dart';
+import 'package:typled_editor/atlas/cubit/atlas_cubit.dart';
 import 'package:typled_editor/atlas_provider.dart';
 
 class AtlasGame extends FlameGame {
@@ -20,6 +21,8 @@ class AtlasGame extends FlameGame {
   late TypledAtlas loadedAtlas;
 
   late SpriteComponent atlasImage;
+
+  final cubit = AtlasCubit();
 
   @override
   FutureOr<void> onLoad() async {
@@ -45,6 +48,14 @@ class AtlasGame extends FlameGame {
       atlasImage = SpriteComponent(
         sprite: Sprite(atlasProvider.image),
       ),
+    );
+
+    cubit.setSprites(
+      loadedAtlas.sprites.entries
+          .map(
+            (e) => e.key,
+          )
+          .toList(),
     );
   }
 }
