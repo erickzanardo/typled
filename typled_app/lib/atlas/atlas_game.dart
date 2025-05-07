@@ -19,6 +19,8 @@ class AtlasGame extends FlameGame {
   final String basePath;
   final String file;
 
+  late final File atlasFile;
+
   late TypledAtlasProvider atlasProvider;
   late TypledAtlas loadedAtlas;
 
@@ -28,11 +30,27 @@ class AtlasGame extends FlameGame {
 
   final cubit = AtlasCubit();
 
+  late final StreamSubscription<FileSystemEvent> _fileWatcher;
+
   @override
   FutureOr<void> onLoad() async {
     await super.onLoad();
 
-    final atlasFile = File(path.join(basePath, file));
+    atlasFile = File(path.join(basePath, file));
+
+    await loadAtlas();
+
+    build();
+
+    _fileWatcher = atlasFile.watch().listen((event) async {
+      if (event.type == FileSystemEvent.modify) {
+        await loadAtlas();
+        build();
+      }
+    });
+  }
+
+  Future<void> loadAtlas() async {
     atlasProvider = (await AtlasProvider.load(
       file: atlasFile,
       basePath: basePath,
@@ -47,6 +65,12 @@ class AtlasGame extends FlameGame {
     );
 
     camera.viewfinder.anchor = Anchor.topLeft;
+  }
+
+  void build() {
+    for (final child in world.children) {
+      child.removeFromParent();
+    }
 
     add(
       FlameBlocListener<AtlasCubit, AtlasState>(
@@ -102,5 +126,12 @@ class AtlasGame extends FlameGame {
       ..color = Colors.yellow
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+
+    _fileWatcher.cancel();
   }
 }

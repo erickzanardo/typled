@@ -9,3 +9,5 @@ top_right_dirt = 2, 0
 
 green_globin = 0, 4
 red_globin = 1, 4
+
+rock = 0, 3
