@@ -229,4 +229,6 @@ class TypledGame extends FlameGame {
     camera.viewfinder.zoom = scale;
     camera.viewfinder.position = Vector2.zero();
   }
+
+  String get basePath => _basePath;
 }

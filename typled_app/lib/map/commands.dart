@@ -1,22 +1,26 @@
 import 'package:flame/game.dart';
+import 'package:typled_editor/atlas_provider.dart';
 import 'package:typled_editor/map/cubit/map_cubit.dart';
 import 'package:typled_editor/map/typled_game.dart';
 import 'package:typled_editor/prompt/prompt_command.dart';
+import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 
-abstract class MapCommand extends Command<(MapCubit, TypledGame)> {
+abstract class MapCommand
+    extends Command<(MapCubit, TypledGame, WorkspaceCubit)> {
   const MapCommand({
     required super.command,
     required super.description,
     required super.usage,
   });
 
-  static final List<MapCommand> commands = [
-    const ZoomCommand(),
-    const ResetCameraCommand(),
-    const PanCameraCommand(),
-    const MoveCommand(),
-    const PaletteCommand(),
-    const TileGridCommand(),
+  static const List<MapCommand> commands = [
+    ZoomCommand(),
+    ResetCameraCommand(),
+    PanCameraCommand(),
+    MoveCommand(),
+    PaletteCommand(),
+    TileGridCommand(),
+    AtlasCommand(),
   ];
 }
 
@@ -29,7 +33,9 @@ class ZoomCommand extends MapCommand {
         );
 
   @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+  void execute(
+      (MapCubit cubit, TypledGame game, WorkspaceCubit workspaceCubit) subject,
+      List<String> args) {
     if (args.isEmpty) {
       return;
     }
@@ -52,7 +58,9 @@ class ResetCameraCommand extends MapCommand {
         );
 
   @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+  void execute(
+      (MapCubit cubit, TypledGame game, WorkspaceCubit workspaceCubit) subject,
+      List<String> args) {
     subject.$2.customCamera = false;
     subject.$2.setCamera();
   }
@@ -67,7 +75,9 @@ class PanCameraCommand extends MapCommand {
         );
 
   @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+  void execute(
+      (MapCubit cubit, TypledGame game, WorkspaceCubit workspaceCubit) subject,
+      List<String> args) {
     final atlas = subject.$2.loadedAtlas;
     if (args.length != 2 || atlas == null) {
       return;
@@ -95,7 +105,9 @@ class MoveCommand extends MapCommand {
         );
 
   @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+  void execute(
+      (MapCubit cubit, TypledGame game, WorkspaceCubit workspaceCubit) subject,
+      List<String> args) {
     final atlas = subject.$2.loadedAtlas;
     if (args.length != 2 || atlas == null) {
       return;
@@ -123,7 +135,9 @@ class PaletteCommand extends MapCommand {
         );
 
   @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+  void execute(
+      (MapCubit cubit, TypledGame game, WorkspaceCubit workspaceCubit) subject,
+      List<String> args) {
     subject.$1.togglePalette();
   }
 }
@@ -137,7 +151,46 @@ class TileGridCommand extends MapCommand {
         );
 
   @override
-  void execute((MapCubit cubit, TypledGame game) subject, List<String> args) {
+  void execute(
+      (MapCubit cubit, TypledGame game, WorkspaceCubit workspaceCubit) subject,
+      List<String> args) {
     subject.$2.tileGrid.value = !subject.$2.tileGrid.value;
+  }
+}
+
+class AtlasCommand extends MapCommand {
+  const AtlasCommand()
+      : super(
+          command: 'atlas',
+          description:
+              'Opens the atlas file of this map (only works for typled atlas).',
+          usage: 'atlas',
+        );
+
+  @override
+  void execute(
+      (MapCubit, TypledGame, WorkspaceCubit) subject, List<String> args) {
+    final atlas = subject.$2.loadedAtlas;
+    if (atlas == null) {
+      return;
+    }
+
+    final map = subject.$2.loadedTypled;
+
+    if (map == null) {
+      return;
+    }
+
+    if (atlas is! TypledAtlasProvider) {
+      return;
+    }
+
+    final path = map.atlas;
+    subject.$3.openFile(
+      FileEntry(
+        file: path,
+        basePath: subject.$2.basePath,
+      ),
+    );
   }
 }
