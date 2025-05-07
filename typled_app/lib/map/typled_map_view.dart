@@ -11,6 +11,7 @@ import 'package:typled_editor/map/cubit/map_cubit.dart';
 import 'package:typled_editor/map/typled_game.dart';
 import 'package:typled_editor/prompt/command_prompt.dart';
 import 'package:typled_editor/widgets/help_dialog.dart';
+import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 
 class TypledMapView extends StatefulWidget {
   const TypledMapView({
@@ -120,7 +121,8 @@ class _TypledMapViewState extends State<TypledMapView> {
                 commands: MapCommand.commands,
                 onSubmitCommand: (command, args) {
                   final mapCubit = context.read<MapCubit>();
-                  command.execute((mapCubit, _game), args);
+                  final workspaceCubit = context.read<WorkspaceCubit>();
+                  command.execute((mapCubit, _game, workspaceCubit), args);
                 },
                 onShowHelp: (context) {
                   HelpDialog.show(context, commands: MapCommand.commands);
