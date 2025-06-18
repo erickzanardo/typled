@@ -86,6 +86,15 @@ class Typled {
           if (trimmedLine == '[layer]') {
             state = _ReadingState.layers;
             layers.add([]);
+          } else if (trimmedLine.startsWith('...')) {
+            final externalPaletteName = trimmedLine.substring(3).trim();
+            if (!externalPalettes.containsKey(externalPaletteName)) {
+              throw Exception(
+                'External palette $externalPaletteName not found',
+              );
+            }
+            final externalPalette = externalPalettes[externalPaletteName]!;
+            palette.addAll(externalPalette.palette);
           } else if (trimmedLine.isNotEmpty) {
             final parts = line.split('=');
             if (parts.length != 2) {

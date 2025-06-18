@@ -12,7 +12,7 @@ C = sprite_3
   group('TypledPalette', () {
     test('can be parsed', () {
       final palette = TypledPalette.parse(content);
-      expect(palette.atlas, 'example_atlas.png');
+      expect(palette.atlas, 'example_atlas.typled_atlas');
       expect(palette.palette, {
         'A': 'sprite_1',
         'B': 'sprite_2',

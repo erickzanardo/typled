@@ -224,6 +224,84 @@ cbababababababababad
           ]);
         });
       });
+
+      group('when using external palettes', () {
+        const rawTypled = '''
+[map]
+name = 1 - 1
+width = 20
+height = 12
+atlas = game.fa
+backgroundColor = #FFFFFF
+
+[palette]
+_ = EMPTY
+
+B = bot
+D = door
+K = key
+
+...external.typled_palette
+
+[layer]
+lijijijijijijijijijk
+gmmm_______________f
+hmm________________e
+gm_________________f
+h__________________e
+g___1__1__1_______1f
+hK__m__m__m__1____1e
+gmmm_________m____mf
+h_____1_________mmme
+g____1m1_____11____f
+hB__1mmm1____mm___De
+cbababababababababad
+''';
+
+        final externalPalette = TypledPalette(
+          atlas: '',
+          palette: {
+            '1': 'sprite_1',
+            '2': 'sprite_2',
+            '3': 'sprite_3',
+          },
+        );
+        test('add the entries from the external palette', () {
+          final typled = Typled.parse(
+            rawTypled,
+            externalPalettes: {'external.typled_palette': externalPalette},
+          );
+
+          // Assert the main palette entries
+          expect(typled.palette, {
+            '_': 'EMPTY',
+            'B': 'bot',
+            'D': 'door',
+            'K': 'key',
+            '1': 'sprite_1',
+            '2': 'sprite_2',
+            '3': 'sprite_3',
+          });
+        });
+
+        group(
+            'when the user does not pass the external palette to the parse method',
+            () {
+          test('throws an exception', () {
+            expect(
+              () => Typled.parse(rawTypled),
+              throwsA(
+                isA<Exception>().having(
+                  (e) => e.toString(),
+                  'message',
+                  contains(
+                      'External palette external.typled_palette not found'),
+                ),
+              ),
+            );
+          });
+        });
+      });
     });
   });
 }
