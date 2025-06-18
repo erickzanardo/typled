@@ -1,10 +1,9 @@
-
 import 'package:test/test.dart';
 import 'package:typled/typled.dart';
 
 void main() {
   final content = '''
-_typled_atlas = example_atlas.png
+_typled_atlas = example_atlas.typled_atlas
 A = sprite_1
 B = sprite_2
 C = sprite_3

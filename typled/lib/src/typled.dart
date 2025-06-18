@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:typled/typled.dart';
+
 enum _ReadingState {
   none,
   map,
@@ -29,7 +31,10 @@ class Typled {
   final List<List<List<String>>> layers;
   final String? backgroundColor;
 
-  factory Typled.parse(String content) {
+  factory Typled.parse(
+    String content, {
+    Map<String, TypledPalette> externalPalettes = const {},
+  }) {
     final lines = content.split(Platform.lineTerminator);
 
     void throwError(String line, String expected) {

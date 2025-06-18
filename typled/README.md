@@ -28,7 +28,38 @@ X___D
 XXXXX
 ```
 
-TODO DOCS
+Maps can also use external palette files, in order to do so, you can use the following syntax:
+
+```dart
+[palette]
+_ = EMPTY
+X = block
+D = door
+...relative/path/to/palette.typled_palette
+```
+
+When loading a map with external palettes, you must have the palette file loaded first and
+pass them to the `Typled.parse` method as the `externalPalettes` parameter:
+
+```dart
+final externalPalettes = <String, TypledPalette>{...};
+final map = Typled.parse(
+  rawContent,
+  externalPalettes: externalPalettes,
+);
+```
+
+External palettes are simple files where the palette entries are defined just like they are in a map, but directly in the file content.
+
+```dart
+A = sprite_1
+B = sprite_2
+C = sprite_3
+```
+
+Additionally, a speciel entry named `_typled_atlas` can be define to inform the
+editor what is the atlas file to be used for this palette, so you can preview
+all the entries in the editor.
 
 A grid of rooms would be something like the following:
 
