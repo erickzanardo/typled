@@ -1,3 +1,7 @@
+## 0.0.4
+
+- Refrain from using `dart:io` to ensure web compatibility.
+
 ## 0.0.3
 
 - Added metadata support for typled files.
