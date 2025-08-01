@@ -1,6 +1,6 @@
 name: typled
 description: The package to parse typled text content.
-version: 0.0.3
+version: 0.0.4
 repository: https://github.com/erickzanardo/typled
 
 environment:
