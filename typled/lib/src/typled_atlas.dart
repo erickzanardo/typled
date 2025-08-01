@@ -1,5 +1,3 @@
-import 'dart:io';
-
 enum _ReadingState { none, atlas, sprites }
 
 class TypledAtlas {
@@ -13,8 +11,11 @@ class TypledAtlas {
   final int tileSize;
   final Map<String, (int, int, int?, int?)> sprites;
 
-  factory TypledAtlas.parse(String content) {
-    final lines = content.split(Platform.lineTerminator);
+  factory TypledAtlas.parse(
+    String content, {
+    String lineTerminator = '\n',
+  }) {
+    final lines = content.split(lineTerminator);
 
     void throwError(String line, String expected) {
       throw Exception('Unknown token at line ${lines.indexOf(line)} $line');

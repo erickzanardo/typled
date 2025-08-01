@@ -1,5 +1,3 @@
-import 'dart:io';
-
 enum _ReadingState {
   none,
   map,
@@ -29,8 +27,11 @@ class Typled {
   final List<List<List<String>>> layers;
   final String? backgroundColor;
 
-  factory Typled.parse(String content) {
-    final lines = content.split(Platform.lineTerminator);
+  factory Typled.parse(
+    String content, {
+    String lineTerminator = '\n',
+  }) {
+    final lines = content.split(lineTerminator);
 
     void throwError(String line, String expected) {
       throw Exception('Unknown token at line ${lines.indexOf(line)} $line');

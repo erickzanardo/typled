@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class TypledGrid {
   TypledGrid({
     required this.gridWidth,
@@ -17,8 +15,11 @@ class TypledGrid {
 
   final Map<(int, int), String> cells;
 
-  factory TypledGrid.parse(String content) {
-    final lines = content.split(Platform.lineTerminator);
+  factory TypledGrid.parse(
+    String content, {
+    String lineTerminator = '\n',
+  }) {
+    final lines = content.split(lineTerminator);
 
     late final int gridWidth;
     late final int gridHeight;
