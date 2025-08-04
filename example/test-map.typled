@@ -1,7 +1,7 @@
 [map]
 name = Test map
-width = 12 
-height = 8 
+width = 12
+height = 8
 atlas = mini-dungeon.typled_atlas
 
 [palette]

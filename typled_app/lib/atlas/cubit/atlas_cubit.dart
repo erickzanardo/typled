@@ -6,16 +6,36 @@ part 'atlas_state.dart';
 class AtlasCubit extends Cubit<AtlasState> {
   AtlasCubit() : super(const AtlasState.initial());
 
-  void setSprites(List<String> sprites) {
-    emit(state.copyWith(sprites: sprites));
+  void setSelections(List<String> selections) {
+    emit(state.copyWith(selections: selections));
   }
 
-  void setSelectedSpriteId(String selectedSpriteId) {
-    emit(state.copyWith(selectedSpriteId: selectedSpriteId));
+  void setSelectedSelectionId(String selectedSelectionId) {
+    emit(
+      state.copyWith(
+        selectedSelectionId: selectedSelectionId,
+        customSelection: (
+          -1,
+          -1,
+          null,
+          null,
+        ),
+      ),
+    );
   }
 
-  void clearSelectedSpriteId() {
-    emit(state.copyWith(selectedSpriteId: ''));
+  void clearSelectedSelectionId() {
+    emit(state.copyWith(selectedSelectionId: ''));
+  }
+
+  void setHitboxMode() {
+    emit(state.copyWith(
+      hitboxeMode: true,
+    ));
+  }
+
+  void setSpritesMode() {
+    emit(state.copyWith(hitboxeMode: false));
   }
 
   void setCustomSelection(
@@ -24,7 +44,8 @@ class AtlasCubit extends Cubit<AtlasState> {
     int? width,
     int? height,
   ) {
-    emit(state.copyWith(customSelection: (x, y, width, height)));
+    emit(state.copyWith(
+        customSelection: (x, y, width, height), selectedSelectionId: ''));
   }
 
   void clearCustomSelection() {

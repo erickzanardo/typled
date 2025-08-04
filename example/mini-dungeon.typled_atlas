@@ -11,3 +11,7 @@ green_globin = 0, 4
 red_globin = 1, 4
 
 rock = 0, 3
+
+[hitboxes]
+rock = 3, 6, 3, 2
+red_globin = 2, 3, 4, 4
