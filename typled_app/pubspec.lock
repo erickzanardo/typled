@@ -478,7 +478,7 @@ packages:
       path: "../typled"
       relative: true
     source: path
-    version: "0.0.4"
+    version: "0.0.5"
   vector_math:
     dependency: transitive
     description:

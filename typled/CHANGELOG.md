@@ -1,3 +1,8 @@
+## 0.0.5
+
+- Added support for hitboxes on atlases.
+
+
 ## 0.0.4
 
 - Refrain from using `dart:io` to ensure web compatibility.
