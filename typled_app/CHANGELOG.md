@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+## 0.0.9
+
+ - Atlas editor supports for hitboxes.
+
 ## 0.0.8
 
  - Atlas editor auto reload when atlas file is changed
