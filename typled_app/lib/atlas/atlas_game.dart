@@ -48,6 +48,17 @@ class AtlasGame extends FlameGame {
         build();
       }
     });
+
+    add(
+      FlameBlocListener<AtlasCubit, AtlasState>(
+        listenWhen: (previous, current) =>
+            previous.hitboxeMode != current.hitboxeMode,
+        bloc: cubit,
+        onNewState: (state) {
+          build();
+        },
+      ),
+    );
   }
 
   Future<void> loadAtlas() async {
@@ -58,13 +69,6 @@ class AtlasGame extends FlameGame {
 
     final rawAtlas = await atlasFile.readAsString();
     loadedAtlas = TypledAtlas.parse(rawAtlas);
-
-    camera = CameraComponent.withFixedResolution(
-      width: atlasProvider.image.width.toDouble(),
-      height: atlasProvider.image.height.toDouble(),
-    );
-
-    camera.viewfinder.anchor = Anchor.topLeft;
   }
 
   void build() {
@@ -72,60 +76,134 @@ class AtlasGame extends FlameGame {
       child.removeFromParent();
     }
 
-    add(
-      FlameBlocListener<AtlasCubit, AtlasState>(
-        bloc: cubit,
-        onNewState: (state) {
-          if (state.selectedSpriteId != '') {
-            final spriteData = loadedAtlas.sprites[state.selectedSpriteId];
-            if (spriteData != null) {
-              setReticleFromSpriteData(spriteData);
+    if (cubit.state.hitboxeMode) {
+      world.add(
+        FlameBlocListener<AtlasCubit, AtlasState>(
+          listenWhen: (previous, current) =>
+              previous.selectedSelectionId != current.selectedSelectionId,
+          bloc: cubit,
+          onNewState: (state) {
+            build();
+          },
+        ),
+      );
+
+      final spriteData = loadedAtlas.sprites[cubit.state.selectedSelectionId];
+      if (spriteData != null) {
+        final spriteSize = Vector2(
+          (spriteData.$3 ?? 1) * loadedAtlas.tileSize.toDouble(),
+          (spriteData.$4 ?? 1) * loadedAtlas.tileSize.toDouble(),
+        );
+        world.add(
+          SpriteComponent(
+            sprite: Sprite(
+              atlasProvider.image,
+              srcPosition: Vector2(
+                (spriteData.$1 * loadedAtlas.tileSize).toDouble(),
+                (spriteData.$2 * loadedAtlas.tileSize).toDouble(),
+              ),
+              srcSize: spriteSize,
+            ),
+          ),
+        );
+
+        camera = CameraComponent.withFixedResolution(
+          width: spriteSize.x,
+          height: spriteSize.y,
+        );
+
+        camera.viewfinder.anchor = Anchor.topLeft;
+      }
+
+      world.add(
+        recticle = RectangleComponent(
+          priority: 10,
+        ),
+      );
+      final state = cubit.state;
+      if (state.customSelection.$1 != -1) {
+        setReticleFromSpriteData(state.customSelection);
+      } else if (state.selectedSelectionId != '') {
+        final hitboxData = loadedAtlas.hitboxes?[state.selectedSelectionId];
+        if (hitboxData != null) {
+          setReticleFromSpriteData(hitboxData);
+        }
+      } else {
+        recticle.paint = Paint();
+      }
+
+      cubit.setSelections(
+        (loadedAtlas.hitboxes ?? {})
+            .entries
+            .map(
+              (e) => e.key,
+            )
+            .toList(),
+      );
+    } else {
+      camera = CameraComponent.withFixedResolution(
+        width: atlasProvider.image.width.toDouble(),
+        height: atlasProvider.image.height.toDouble(),
+      );
+
+      camera.viewfinder.anchor = Anchor.topLeft;
+
+      world.add(
+        FlameBlocListener<AtlasCubit, AtlasState>(
+          bloc: cubit,
+          onNewState: (state) {
+            if (state.customSelection.$1 != -1) {
+              setReticleFromSpriteData(state.customSelection);
+            } else if (state.selectedSelectionId != '') {
+              final spriteData = loadedAtlas.sprites[state.selectedSelectionId];
+              if (spriteData != null) {
+                setReticleFromSpriteData(spriteData);
+              }
+            } else {
+              recticle.paint = Paint();
             }
-          } else if (state.customSelection.$1 != -1) {
-            setReticleFromSpriteData(state.customSelection);
-          } else {
-            recticle.paint = Paint();
-          }
-        },
-      ),
-    );
+          },
+        ),
+      );
 
-    world.add(
-      atlasImage = SpriteComponent(
-        sprite: Sprite(atlasProvider.image),
-      ),
-    );
+      world.add(
+        atlasImage = SpriteComponent(
+          sprite: Sprite(atlasProvider.image),
+        ),
+      );
 
-    world.add(
-      recticle = RectangleComponent(
-        priority: 10,
-      ),
-    );
+      world.add(
+        recticle = RectangleComponent(
+          priority: 10,
+        ),
+      );
 
-    cubit.setSprites(
-      loadedAtlas.sprites.entries
-          .map(
-            (e) => e.key,
-          )
-          .toList(),
-    );
+      cubit.setSelections(
+        loadedAtlas.sprites.entries
+            .map(
+              (e) => e.key,
+            )
+            .toList(),
+      );
+    }
   }
 
   void setReticleFromSpriteData((int, int, int?, int?) spriteData) {
+    final modifier = cubit.state.hitboxeMode ? 1 : loadedAtlas.tileSize;
     recticle
       ..size = Vector2(
-        ((spriteData.$3 ?? 1) * loadedAtlas.tileSize).toDouble(),
-        ((spriteData.$4 ?? 1) * loadedAtlas.tileSize).toDouble(),
+        ((spriteData.$3 ?? 1) * modifier).toDouble(),
+        ((spriteData.$4 ?? 1) * modifier).toDouble(),
       )
       ..position = Vector2(
-        (spriteData.$1 * loadedAtlas.tileSize).toDouble(),
-        (spriteData.$2 * loadedAtlas.tileSize).toDouble(),
+        (spriteData.$1 * modifier).toDouble(),
+        (spriteData.$2 * modifier).toDouble(),
       );
 
     recticle.paint = Paint()
       ..color = Colors.yellow
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
+      ..strokeWidth = cubit.state.hitboxeMode ? 0 : 1;
   }
 
   @override

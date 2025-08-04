@@ -58,17 +58,19 @@ class _AtlasViewState extends State<AtlasView> {
                           child: Column(
                             spacing: 16,
                             children: [
-                              Text('Sprites',
+                              const SizedBox(),
+                              Text(state.hitboxeMode ? 'Hitboxes' : 'Sprites',
                                   style:
                                       Theme.of(context).textTheme.titleLarge),
                               const Divider(),
-                              for (final spriteId in state.sprites)
+                              for (final spriteId in state.selections)
                                 NesPressable(
                                   onPress: () {
-                                    if (spriteId == state.selectedSpriteId) {
-                                      _game.cubit.clearSelectedSpriteId();
+                                    if (spriteId == state.selectedSelectionId) {
+                                      _game.cubit.clearSelectedSelectionId();
                                     } else {
-                                      _game.cubit.setSelectedSpriteId(spriteId);
+                                      _game.cubit
+                                          .setSelectedSelectionId(spriteId);
                                     }
                                   },
                                   child: Padding(
@@ -78,7 +80,8 @@ class _AtlasViewState extends State<AtlasView> {
                                       spacing: 16,
                                       children: [
                                         const SizedBox(),
-                                        if (state.selectedSpriteId == spriteId)
+                                        if (state.selectedSelectionId ==
+                                            spriteId)
                                           NesIcon(
                                             iconData:
                                                 NesIcons.handPointingRight,
@@ -102,6 +105,7 @@ class _AtlasViewState extends State<AtlasView> {
           onSubmitCommand: (command, args) {
             command.execute(
               (
+                _game,
                 _game.cubit,
                 context.read<WorkspaceCubit>(),
               ),

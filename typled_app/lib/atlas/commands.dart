@@ -1,8 +1,10 @@
+import 'package:typled_editor/atlas/atlas_game.dart';
 import 'package:typled_editor/atlas/cubit/atlas_cubit.dart';
 import 'package:typled_editor/prompt/prompt_command.dart';
 import 'package:typled_editor/workspace/cubit/workspace_cubit.dart';
 
-abstract class AtlasCommand extends Command<(AtlasCubit, WorkspaceCubit)> {
+abstract class AtlasCommand
+    extends Command<(AtlasGame, AtlasCubit, WorkspaceCubit)> {
   const AtlasCommand({
     required super.command,
     required super.description,
@@ -12,6 +14,8 @@ abstract class AtlasCommand extends Command<(AtlasCubit, WorkspaceCubit)> {
   static List<AtlasCommand> commands = [
     const SelectSpriteCommand(),
     const CustomSelectionCommand(),
+    const HitboxMode(),
+    const SpritesMode(),
   ];
 }
 
@@ -24,16 +28,16 @@ class SelectSpriteCommand extends AtlasCommand {
         );
 
   @override
-  execute((AtlasCubit, WorkspaceCubit) context, List<String> args) {
-    final cubit = context.$1;
+  execute((AtlasGame, AtlasCubit, WorkspaceCubit) context, List<String> args) {
+    final cubit = context.$2;
 
     final spriteId = args.first.trim();
     if (spriteId.isEmpty) {
-      cubit.clearSelectedSpriteId();
+      cubit.clearSelectedSelectionId();
       return;
     }
 
-    cubit.setSelectedSpriteId(spriteId);
+    cubit.setSelectedSelectionId(spriteId);
   }
 }
 
@@ -46,8 +50,8 @@ class CustomSelectionCommand extends AtlasCommand {
         );
 
   @override
-  execute((AtlasCubit, WorkspaceCubit) context, List<String> args) {
-    final cubit = context.$1;
+  execute((AtlasGame, AtlasCubit, WorkspaceCubit) context, List<String> args) {
+    final cubit = context.$2;
 
     if (args.length < 2) {
       cubit.clearCustomSelection();
@@ -65,5 +69,37 @@ class CustomSelectionCommand extends AtlasCommand {
     }
 
     cubit.setCustomSelection(x, y, width, height);
+  }
+}
+
+class HitboxMode extends AtlasCommand {
+  const HitboxMode()
+      : super(
+          command: 'hitbox',
+          description: 'Set the editor in the hitbox mode',
+          usage: 'hitbox',
+        );
+
+  @override
+  execute((AtlasGame, AtlasCubit, WorkspaceCubit) context, List<String> args) {
+    final cubit = context.$2;
+
+    cubit.setHitboxMode();
+  }
+}
+
+class SpritesMode extends AtlasCommand {
+  const SpritesMode()
+      : super(
+          command: 'sprites',
+          description: 'Set the editor in the sprites mode',
+          usage: 'sprites',
+        );
+
+  @override
+  execute((AtlasGame, AtlasCubit, WorkspaceCubit) context, List<String> args) {
+    final cubit = context.$2;
+
+    cubit.setSpritesMode();
   }
 }
