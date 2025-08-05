@@ -150,6 +150,8 @@ void openFile(String filePath) {
   }
 
   if (process.exitCode != 0) {
+    logger.err(process.stdout);
+    logger.err(process.stderr);
     logger.err('Failed to open file');
     exit(1);
   }
