@@ -71,7 +71,10 @@ class AtlasCubit extends Cubit<AtlasState> {
       final selectionDX = selectionX + (selectionData.$3 ?? 1) - 1;
       final selectionDY = selectionY + (selectionData.$4 ?? 1) - 1;
 
-      if (index.$1 >= selectionX && index.$1 <= selectionDX && index.$2 >= selectionY && index.$2 <= selectionDY) {
+      if (index.$1 >= selectionX &&
+          index.$1 <= selectionDX &&
+          index.$2 >= selectionY &&
+          index.$2 <= selectionDY) {
         setSelectedSelectionId(selection);
         return;
       }
