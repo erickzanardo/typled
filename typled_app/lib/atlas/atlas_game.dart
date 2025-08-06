@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flame/events.dart';
 import 'package:flame_bloc/flame_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
@@ -10,7 +11,7 @@ import 'package:typled/typled.dart';
 import 'package:typled_editor/atlas/cubit/atlas_cubit.dart';
 import 'package:typled_editor/atlas_provider.dart';
 
-class AtlasGame extends FlameGame {
+class AtlasGame extends FlameGame with TapCallbacks {
   AtlasGame({
     required this.basePath,
     required this.file,
@@ -167,8 +168,10 @@ class AtlasGame extends FlameGame {
       );
 
       world.add(
-        atlasImage = SpriteComponent(
+        atlasImage = _AtlasImageComponent(
           sprite: Sprite(atlasProvider.image),
+          cubit: cubit,
+          atlas: loadedAtlas,
         ),
       );
 
@@ -211,5 +214,31 @@ class AtlasGame extends FlameGame {
     super.onRemove();
 
     _fileWatcher.cancel();
+  }
+}
+
+class _AtlasImageComponent extends SpriteComponent with TapCallbacks {
+  _AtlasImageComponent({
+    required super.sprite,
+    required this.cubit,
+    required this.atlas,
+  }) : super(priority: 1);
+
+  final AtlasCubit cubit;
+  final TypledAtlas atlas;
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    super.onTapUp(event);
+
+    final position = event.localPosition;
+    final index = (
+      position.x ~/ atlas.tileSize,
+      position.y ~/ atlas.tileSize,
+    );
+    cubit.findSelection(
+      index: index,
+      atlas: atlas,
+    );
   }
 }

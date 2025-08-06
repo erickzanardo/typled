@@ -12,14 +12,14 @@ class OpenCommand extends Command {
   String get name => 'open';
 
   @override
-  ArgParser get argParser =>
-      ArgParser()..addOption(
-        'file',
-        abbr: 'f',
-        help: 'The file to open',
-        mandatory: true,
-        valueHelp: 'file',
-      );
+  ArgParser get argParser => ArgParser()
+    ..addOption(
+      'file',
+      abbr: 'f',
+      help: 'The file to open',
+      mandatory: true,
+      valueHelp: 'file',
+    );
 
   @override
   FutureOr? run() async {
