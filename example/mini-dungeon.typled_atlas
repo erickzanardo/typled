@@ -12,6 +12,8 @@ red_globin = 1, 4
 
 rock = 0, 3
 
+tree_leaves = 1, 5, 3, 3
+
 [hitboxes]
 rock = 3, 6, 3, 2
 red_globin = 2, 3, 4, 4

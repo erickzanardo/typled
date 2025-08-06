@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:typled/typled.dart';
 
 part 'atlas_state.dart';
 
@@ -50,5 +51,30 @@ class AtlasCubit extends Cubit<AtlasState> {
 
   void clearCustomSelection() {
     emit(state.copyWith(customSelection: (-1, -1, null, null)));
+  }
+
+  void findSelection({
+    required (int, int) index,
+    required TypledAtlas atlas,
+  }) {
+    // Check if any selection is inside the index
+
+    for (final selection in state.selections) {
+      final selectionData = atlas.sprites[selection];
+
+      if (selectionData == null) {
+        continue;
+      }
+
+      final selectionX = selectionData.$1;
+      final selectionY = selectionData.$2;
+      final selectionDX = selectionX + (selectionData.$3 ?? 1) - 1;
+      final selectionDY = selectionY + (selectionData.$4 ?? 1) - 1;
+
+      if (index.$1 >= selectionX && index.$1 <= selectionDX && index.$2 >= selectionY && index.$2 <= selectionDY) {
+        setSelectedSelectionId(selection);
+        return;
+      }
+    }
   }
 }
