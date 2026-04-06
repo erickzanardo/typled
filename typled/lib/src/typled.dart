@@ -27,11 +27,8 @@ class Typled {
   final List<List<List<String>>> layers;
   final String? backgroundColor;
 
-  factory Typled.parse(
-    String content, {
-    String lineTerminator = '\n',
-  }) {
-    final lines = content.split(lineTerminator);
+  factory Typled.parse(String content) {
+    final lines = content.replaceAll('\r\n', '\n').split('\n');
 
     void throwError(String line, String expected) {
       throw Exception('Unknown token at line ${lines.indexOf(line)} $line');
