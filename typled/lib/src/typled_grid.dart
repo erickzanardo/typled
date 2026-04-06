@@ -15,11 +15,8 @@ class TypledGrid {
 
   final Map<(int, int), String> cells;
 
-  factory TypledGrid.parse(
-    String content, {
-    String lineTerminator = '\n',
-  }) {
-    final lines = content.split(lineTerminator);
+  factory TypledGrid.parse(String content) {
+    final lines = content.replaceAll('\r\n', '\n').split('\n');
 
     late final int gridWidth;
     late final int gridHeight;
